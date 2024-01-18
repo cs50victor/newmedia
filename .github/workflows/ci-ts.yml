@@ -38,4 +38,4 @@ jobs:
 
       #  Errors out on build when separated into multiple steps
       - name: Install, Build, and Lint Demo
-        run: cd meet && bun install --ignore-scripts && bun run build && bun run lint
+        run: cd demo && bun install --ignore-scripts && bun run build && bun run lint
