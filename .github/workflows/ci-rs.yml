@@ -39,7 +39,7 @@ jobs:
           enable-sccache: "true"
 
       - name: Install binaries
-        run: sudo apt-get update && sudo apt-get install -y clang pkg-config libavfilter-dev libavdevice-dev libavcodec-dev libavformat-dev libavutil-dev
+        run: sudo apt-get update && sudo apt-get install -y clang pkg-config
 
       - name: Build
         run: cargo build --release # --verbose
