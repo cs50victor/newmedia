@@ -68,10 +68,7 @@ impl LLMChannel {
 /// Note: if chunks don't end with space or punctuation (" ", ".", "?", "!"),
 /// the stream will wait for more text.
 /// Used during input streaming to chunk text blocks and set last char to space
-pub fn run_llm(
-    mut llm_channel: ResMut<LLMChannel>,
-    async_runtime: Res<crate::AsyncRuntime>,
-) {
+pub fn run_llm(mut llm_channel: ResMut<LLMChannel>, async_runtime: Res<crate::AsyncRuntime>) {
     while let Ok(chunk) = llm_channel.rx.try_recv() {
         log::info!("\n\n\nchunk gotten from llm channel, {chunk}");
         llm_channel.txt_buffer.push_str(&chunk);

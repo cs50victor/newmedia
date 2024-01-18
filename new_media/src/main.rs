@@ -17,7 +17,8 @@ use log::info;
 
 use bevy::{
     app::ScheduleRunnerPlugin, core::Name, core_pipeline::tonemapping::Tonemapping, log::LogPlugin,
-    prelude::*, render::renderer::RenderDevice, time::common_conditions::on_timer, tasks::AsyncComputeTaskPool,
+    prelude::*, render::renderer::RenderDevice, tasks::AsyncComputeTaskPool,
+    time::common_conditions::on_timer,
 };
 use bevy_panorbit_camera::{PanOrbitCamera, PanOrbitCameraPlugin};
 
@@ -30,9 +31,7 @@ use futures::StreamExt;
 use log::{error, warn};
 use serde::{Deserialize, Serialize};
 
-use crate::{
-    controls::WorldControlChannel, llm::LLMChannel, server::RoomData,
-};
+use crate::{controls::WorldControlChannel, llm::LLMChannel, server::RoomData};
 
 pub const OPENAI_ORG_ID: &str = "OPENAI_ORG_ID";
 
@@ -48,7 +47,6 @@ impl FromWorld for AsyncRuntime {
         Self { rt: std::sync::Arc::new(rt) }
     }
 }
-
 
 #[derive(Resource)]
 pub struct StreamingFrameData {
@@ -129,7 +127,11 @@ fn setup_gaussian_cloud(
 
     commands.spawn((
         Camera3dBundle {
-            transform: Transform { translation: Vec3::new(-0.59989005, -0.88360703, -2.0863006), rotation: Quat::from_xyzw(-0.97177905, -0.026801618, 0.13693734, -0.1901983), scale: Vec3::new(1.0, 1.0, 1.0) },
+            transform: Transform {
+                translation: Vec3::new(-0.59989005, -0.88360703, -2.0863006),
+                rotation: Quat::from_xyzw(-0.97177905, -0.026801618, 0.13693734, -0.1901983),
+                scale: Vec3::new(1.0, 1.0, 1.0),
+            },
             tonemapping: Tonemapping::None,
             camera: Camera { target: render_target, ..default() },
             ..default()
@@ -156,7 +158,6 @@ pub fn sync_bevy_and_server_resources(
         let participant_room_name = &(server_state_clone.state.lock().0).clone();
         if !participant_room_name.is_empty() {
             let video_frame_dimensions = scene_controller.dimensions();
-            
         };
     }
 }

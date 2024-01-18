@@ -3,6 +3,7 @@ name: CI-RS
 on:
   push:
     paths:
+      - "**/.github/workflows/ci-rs.yml"
       - "**/new_media/**"
       - "**/Cargo.lock"
       - "**/Cargo.toml"
@@ -12,6 +13,9 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  # Set more verbose terminal output
+  CARGO_TERM_VERBOSE: true
+  RUST_BACKTRACE: 1
 
 # Cancel old builds on new commit for same workflow + branch/PR
 concurrency:
@@ -20,7 +24,9 @@ concurrency:
 
 jobs:
   ci-rs:
-    runs-on: ubuntu-latest
+    # revert later  
+    # runs-on: ubuntu-latest
+    runs-on: macos-latest
     strategy:
       fail-fast: false
       matrix:
@@ -38,8 +44,8 @@ jobs:
           components: rustfmt, clippy
           enable-sccache: "true"
 
-      - name: Install binaries
-        run: sudo apt-get update && sudo apt-get install -y clang
+      # - name: Install binaries
+      #   run: sudo apt-get update && sudo apt-get install -y clang pkg-config libx11-dev libasound2-dev libudev-dev libxkbcommon-x11-0 gcc-multilib
 
       - name: Build
         run: cargo build --release # --verbose
