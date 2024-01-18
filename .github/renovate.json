@@ -1,0 +1,19 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:base", ":disableDependencyDashboard"],
+  "dependencyDashboardAutoclose": true,
+  "lockFileMaintenance": { "enabled": false },
+  "packageRules": [
+    {
+      "matchPackagePatterns": ["*"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "all non-major depedencies",
+      "groupSlug": "all minor patches"
+    }
+  ],
+  "prConcurrentLimit": 1,
+  "prCreation": "not-pending",
+  "prHourlyLimit": 1,
+  "schedule": ["after 5pm on monday"],
+  "stabilityDays": 2
+}
