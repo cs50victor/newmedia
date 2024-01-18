@@ -1,19 +1,17 @@
 {
   "name": "new_media",
-  "version": "0.0.1",
-  "description": "",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
-    "prepare": "husky install",
     "build": "pnpm --dir=demo build",
     "dev": "concurrently --names 'WEB,SERVER' -c 'auto' \"pnpm --dir=demo dev\" \"cargo rr --bin new_media\"",
     "format": "concurrently --names 'fmt:web,fmt:rs,fmt:toml' -c 'auto' \"pnpm format:prettier\" \"pnpm format:rs\" \"pnpm format:toml\"",
     "format:prettier": "prettier --write \"**/*.{js,ts,tsx}\"",
     "format:rs": "cargo fmt --all",
     "format:toml": "taplo format",
+    "prepare": "husky install",
     "pre-commit": "lint-staged"
   },
-  "keywords": [],
-  "author": "",
   "license": "ISC",
   "devDependencies": {
     "@taplo/cli": "^0.5.2",
@@ -21,6 +19,9 @@
     "husky": "^8.0.3",
     "lint-staged": "^15.2.0",
     "prettier": "^3.1.1"
+  },
+  "optionalDependencies": {
+    "rust": "nightly"
   },
   "lint-staged": {
     "*.rs": [
@@ -37,7 +38,7 @@
       "prettier --write"
     ]
   },
-  "packageManager": "pnpm@8.7.6",
+  "packageManager": "pnpm@8.14.0",
   "engines": {
     "node": "20.x",
     "pnpm": "8"
