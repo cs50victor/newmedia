@@ -205,7 +205,6 @@ pub mod scene {
                 PostUpdate,
                 update
                     .run_if(resource_exists::<crate::StreamingFrameData>())
-                    .run_if(resource_exists::<crate::AsyncRuntime>()),
             );
         }
     }
@@ -311,7 +310,6 @@ pub mod scene {
     fn update(
         mut images: ResMut<Assets<Image>>,
         images_to_save: Query<&ImageToSave>,
-        async_runtime: Res<crate::AsyncRuntime>,
         single_frame_data: ResMut<crate::StreamingFrameData>,
         mut scene_controller: ResMut<SceneController>,
     ) {
