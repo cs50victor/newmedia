@@ -4,36 +4,22 @@ mod frame_capture;
 mod server;
 mod video;
 
-use std::sync::{
-    atomic::{AtomicBool, Ordering},
-    Arc,
-};
+use std::sync::{atomic::AtomicBool, Arc};
 
-use bevy_ws_server::{ReceiveError, WsConnection, WsListener, WsPlugin};
-use frame_capture::scene::SceneController;
-use image::RgbaImage;
+use bevy_ws_server::WsPlugin;
+
 // use actix_web::{middleware, web::Data, App, HttpServer};
-use log::info;
 
 use bevy::{
     app::ScheduleRunnerPlugin, core::Name, core_pipeline::tonemapping::Tonemapping, log::LogPlugin,
-    prelude::*, render::renderer::RenderDevice, tasks::AsyncComputeTaskPool,
-    time::common_conditions::on_timer,
+    prelude::*, render::renderer::RenderDevice,
 };
 use bevy_panorbit_camera::{PanOrbitCamera, PanOrbitCameraPlugin};
 
 use bevy_gaussian_splatting::{GaussianCloud, GaussianSplattingBundle, GaussianSplattingPlugin};
 
-use pollster::FutureExt;
-
-use futures::StreamExt;
-
-use log::{error, warn};
 use serde::{Deserialize, Serialize};
 use server::{receive_message, start_ws};
-
-
-use crate::{controls::WorldControlChannel, server::RoomData};
 
 #[derive(Resource)]
 pub struct StreamingFrameData {
@@ -100,7 +86,6 @@ fn setup_gaussian_cloud(
     ));
 }
 
-
 pub struct AppConfig {
     pub width: u32,
     pub height: u32,
@@ -116,9 +101,9 @@ fn main() {
         .filter_module("bevy_ws_server", log::LevelFilter::Info)
         .filter_module("bevy_ws_server", log::LevelFilter::Debug)
         .init();
-    
+
     let config = AppConfig { width: 1920, height: 1080 };
-    
+
     App::new()
     .insert_resource(frame_capture::scene::SceneController::new(config.width, config.height))
     .insert_resource(ClearColor(Color::rgb_u8(0, 0, 0)))
@@ -159,4 +144,3 @@ fn move_camera(mut camera: Query<&mut Transform, With<Camera>>) {
         transform.translation.z += 0.0005;
     }
 }
-

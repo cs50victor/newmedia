@@ -187,7 +187,6 @@ pub mod scene {
         render::{camera::RenderTarget, renderer::RenderDevice},
     };
 
-    use pollster::FutureExt;
     use wgpu::{Extent3d, TextureDescriptor, TextureDimension, TextureFormat, TextureUsages};
 
     use super::image_copy::ImageCopier;
@@ -203,8 +202,7 @@ pub mod scene {
         fn build(&self, app: &mut App) {
             app.add_systems(
                 PostUpdate,
-                update
-                    .run_if(resource_exists::<crate::StreamingFrameData>())
+                update.run_if(resource_exists::<crate::StreamingFrameData>()),
             );
         }
     }
@@ -316,7 +314,7 @@ pub mod scene {
         if let SceneState::Render(n) = scene_controller.state {
             if n < 1 {
                 let single_frame_data = single_frame_data.into_inner();
-                let pixel_size = single_frame_data.pixel_size;
+                let _pixel_size = single_frame_data.pixel_size;
                 for image in images_to_save.iter() {
                     let img_bytes = images.get_mut(image.id()).unwrap();
 
@@ -325,7 +323,7 @@ pub mod scene {
                         Err(e) => panic!("Failed to create image buffer {e:?}"),
                     };
 
-                    let (w, h) = rgba_img.dimensions();
+                    let (_w, _h) = rgba_img.dimensions();
 
                     // send image
                 }
