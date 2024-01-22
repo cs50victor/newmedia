@@ -726,7 +726,7 @@ dependencies = [
 [[package]]
 name = "bevy_gaussian_splatting"
 version = "2.0.2"
-source = "git+https://github.com/mosure/bevy_gaussian_splatting.git?branch=main#4d855c3e9dacc9dc537966ce6c60afc15e81ac56"
+source = "git+https://github.com/mosure/bevy_gaussian_splatting.git?branch=main#10533d92b5de678a6d58d379f346b84fab2b9be4"
 dependencies = [
  "bevy",
  "bevy-inspector-egui",
@@ -1236,7 +1236,7 @@ dependencies = [
 [[package]]
 name = "bevy_ws_server"
 version = "0.2.1"
-source = "git+https://github.com/cs50victor/bevy-ws-server.git?branch=main#85478559c5b9cff519453b50dd027d659ed90c2b"
+source = "git+https://github.com/cs50victor/bevy-ws-server.git?branch=main#daaa533548c169a72c65270e74491d757c539273"
 dependencies = [
  "anyhow",
  "async-channel 2.1.1",
@@ -4770,9 +4770,9 @@ dependencies = [
 
 [[package]]
 name = "weezl"
-version = "0.1.7"
+version = "0.1.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9193164d4de03a926d909d3bc7c30543cecb35400c02114792c2cae20d5e2dbb"
+checksum = "53a85b86a771b1c87058196170769dd264f66c0782acf1ae6cc51bfd64b39082"
 
 [[package]]
 name = "wgpu"
