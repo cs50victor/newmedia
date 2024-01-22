@@ -1,52 +1,25 @@
 #![feature(ascii_char, async_closure, slice_pattern)]
 mod controls;
 mod frame_capture;
-mod llm;
 mod server;
 mod video;
 
-use std::sync::{
-    atomic::{AtomicBool, Ordering},
-    Arc,
-};
+use std::sync::{atomic::AtomicBool, Arc};
 
-use frame_capture::scene::SceneController;
-use image::RgbaImage;
+use bevy_ws_server::WsPlugin;
+
 // use actix_web::{middleware, web::Data, App, HttpServer};
-use log::info;
 
 use bevy::{
     app::ScheduleRunnerPlugin, core::Name, core_pipeline::tonemapping::Tonemapping, log::LogPlugin,
-    prelude::*, render::renderer::RenderDevice, tasks::AsyncComputeTaskPool,
-    time::common_conditions::on_timer,
+    prelude::*, render::renderer::RenderDevice,
 };
 use bevy_panorbit_camera::{PanOrbitCamera, PanOrbitCameraPlugin};
 
 use bevy_gaussian_splatting::{GaussianCloud, GaussianSplattingBundle, GaussianSplattingPlugin};
 
-use pollster::FutureExt;
-
-use futures::StreamExt;
-
-use log::{error, warn};
 use serde::{Deserialize, Serialize};
-
-use crate::{controls::WorldControlChannel, llm::LLMChannel, server::RoomData};
-
-pub const OPENAI_ORG_ID: &str = "OPENAI_ORG_ID";
-
-#[derive(Resource)]
-pub struct AsyncRuntime {
-    rt: std::sync::Arc<tokio::runtime::Runtime>,
-}
-
-impl FromWorld for AsyncRuntime {
-    fn from_world(_world: &mut World) -> Self {
-        let rt = tokio::runtime::Builder::new_multi_thread().enable_all().build().unwrap();
-
-        Self { rt: std::sync::Arc::new(rt) }
-    }
-}
+use server::{receive_message, start_ws};
 
 #[derive(Resource)]
 pub struct StreamingFrameData {
@@ -59,42 +32,9 @@ struct RoomText {
     timestamp: i64,
 }
 
-#[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash, States)]
-pub enum AppState {
-    #[default]
-    Idle,
-    Active,
-}
-
-#[derive(Default, Debug, PartialEq)]
-pub enum AppStateServerResource {
-    #[default]
-    Init,
-    Idle,
-    Active,
-}
-
-#[derive(Default, Debug, PartialEq)]
-struct ParticipantRoomName(String);
-
-impl From<AppState> for AppStateServerResource {
-    fn from(value: AppState) -> Self {
-        match value {
-            AppState::Idle => AppStateServerResource::Idle,
-            AppState::Active => AppStateServerResource::Active,
-        }
-    }
-}
-
 #[derive(Resource)]
 pub struct AudioSync {
     should_stop: Arc<AtomicBool>,
-}
-
-#[derive(Resource)]
-pub struct AppStateSync {
-    state: std::sync::Arc<parking_lot::Mutex<ParticipantRoomName>>,
-    dirty: bool,
 }
 
 fn setup_gaussian_cloud(
@@ -146,22 +86,6 @@ fn setup_gaussian_cloud(
     ));
 }
 
-pub fn sync_bevy_and_server_resources(
-    mut commands: Commands,
-    async_runtime: Res<AsyncRuntime>,
-    mut server_state_clone: ResMut<AppStateSync>,
-    mut set_app_state: ResMut<NextState<AppState>>,
-    scene_controller: Res<SceneController>,
-    audio_syncer: Res<AudioSync>,
-) {
-    if !server_state_clone.dirty {
-        let participant_room_name = &(server_state_clone.state.lock().0).clone();
-        if !participant_room_name.is_empty() {
-            let video_frame_dimensions = scene_controller.dimensions();
-        };
-    }
-}
-
 pub struct AppConfig {
     pub width: u32,
     pub height: u32,
@@ -169,32 +93,21 @@ pub struct AppConfig {
 
 fn main() {
     dotenvy::from_filename_override(".env.local").ok();
-
     // ************** REQUIRED ENV VARS **************
-    std::env::var(OPENAI_ORG_ID).expect("OPENAI_ORG_ID must be set");
 
-    let mut formatted_builder = pretty_env_logger::formatted_builder();
-
-    let pretty_env_builder = formatted_builder
-        .filter_module("lkgpt", log::LevelFilter::Info)
-        .filter_module("actix_server", log::LevelFilter::Info)
+    pretty_env_logger::formatted_builder()
+        .filter_module("new_media", log::LevelFilter::Info)
         .filter_module("bevy", log::LevelFilter::Info)
-        .filter_module("actix_web", log::LevelFilter::Info);
-
-    if cfg!(target_os = "unix") {
-        pretty_env_builder.filter_module("livekit", log::LevelFilter::Info);
-    }
-
-    pretty_env_builder.init();
-
-    let mut app = App::new();
+        .filter_module("bevy_ws_server", log::LevelFilter::Info)
+        .filter_module("bevy_ws_server", log::LevelFilter::Debug)
+        .init();
 
     let config = AppConfig { width: 1920, height: 1080 };
 
-    app.insert_resource(frame_capture::scene::SceneController::new(config.width, config.height));
-    app.insert_resource(ClearColor(Color::rgb_u8(0, 0, 0)));
-
-    app.add_plugins((
+    App::new()
+    .insert_resource(frame_capture::scene::SceneController::new(config.width, config.height))
+    .insert_resource(ClearColor(Color::rgb_u8(0, 0, 0)))
+    .add_plugins((
         bevy_web_asset::WebAssetPlugin,
         DefaultPlugins
             .set(ImagePlugin::default_nearest())
@@ -204,50 +117,24 @@ fn main() {
                 exit_condition: bevy::window::ExitCondition::DontExit,
                 close_when_requested: false,
             }).disable::<LogPlugin>(),
+        WsPlugin,
         frame_capture::image_copy::ImageCopyPlugin,
         frame_capture::scene::CaptureFramePlugin,
         ScheduleRunnerPlugin::run_loop(std::time::Duration::from_secs_f64(1.0 / 60.0)),
         PanOrbitCameraPlugin,
         // plugin for gaussian splatting
         GaussianSplattingPlugin,
-    ));
-
-    app.add_state::<AppState>();
-    app.init_resource::<AsyncRuntime>();
-    app.insert_resource(AudioSync { should_stop: Arc::new(AtomicBool::new(false)) });
-    app.init_resource::<server::ActixServer>();
-
-    app.init_resource::<frame_capture::scene::SceneController>();
-    app.add_event::<frame_capture::scene::SceneController>();
-
-    app.add_systems(Update, move_camera);
-
-    app.add_systems(Update, server::shutdown_bevy_remotely);
-
-    // app.add_systems(
-    //     Update,
-    //     room_events::handle_room_events
-    //         .run_if(resource_exists::<llm::LLMChannel>())
-    //         .run_if(resource_exists::<stt::STT>())
-    //         .run_if(resource_exists::<video::VideoChannel>())
-    //         .run_if(resource_exists::<LivekitRoom>()),
-    // );
-
-    app.add_systems(
-        Update,
-        llm::run_llm
-            .run_if(resource_exists::<llm::LLMChannel>())
-            .run_if(in_state(AppState::Active)),
-    );
-
-    app.add_systems(
-        Update,
-        sync_bevy_and_server_resources.run_if(on_timer(std::time::Duration::from_secs(2))),
-    );
-
-    app.add_systems(OnEnter(AppState::Active), setup_gaussian_cloud);
-
-    app.run();
+    ))
+    .insert_resource(AudioSync { should_stop: Arc::new(AtomicBool::new(false)) })
+    .init_resource::<frame_capture::scene::SceneController>()
+    .add_event::<frame_capture::scene::SceneController>()
+    .add_systems(Startup, start_ws)
+    .add_systems(Update, (
+        move_camera,
+        receive_message
+    ))
+    // .add_systems(OnEnter(AppState::Active), setup_gaussian_cloud)
+    .run();
 }
 
 fn move_camera(mut camera: Query<&mut Transform, With<Camera>>) {
