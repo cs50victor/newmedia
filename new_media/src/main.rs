@@ -40,7 +40,7 @@ pub struct AudioSync {
 
 fn setup_gaussian_cloud(
     mut commands: Commands,
-    asset_server: Res<AssetServer>,
+    _asset_server: Res<AssetServer>,
     mut gaussian_assets: ResMut<Assets<GaussianCloud>>,
     mut scene_controller: ResMut<frame_capture::scene::SceneController>,
     mut images: ResMut<Assets<Image>>,

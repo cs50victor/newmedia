@@ -61,7 +61,11 @@ pub fn start_ws(listener: Res<WsListener>) {
     };
 }
 
-pub fn receive_message(mut commands: Commands, curr_base64_img: Res<CurrImageBase64>, connections: Query<(Entity, &WsConnection)>) {
+pub fn receive_message(
+    mut commands: Commands,
+    curr_base64_img: Res<CurrImageBase64>,
+    connections: Query<(Entity, &WsConnection)>,
+) {
     for (entity, conn) in connections.iter() {
         loop {
             match conn.receive() {
@@ -84,4 +88,3 @@ pub fn receive_message(mut commands: Commands, curr_base64_img: Res<CurrImageBas
         }
     }
 }
-

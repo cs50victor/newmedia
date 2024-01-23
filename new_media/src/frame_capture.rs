@@ -191,7 +191,7 @@ pub mod scene {
         render::{camera::RenderTarget, renderer::RenderDevice},
     };
 
-    use image::{DynamicImage, ImageBuffer, ImageOutputFormat, Rgba, RgbaImage};
+    use image::{ImageBuffer, ImageOutputFormat, Rgba, RgbaImage};
     use wgpu::{Extent3d, TextureDescriptor, TextureDimension, TextureFormat, TextureUsages};
 
     use super::image_copy::ImageCopier;
@@ -340,7 +340,7 @@ pub mod scene {
         }
     }
 
-    fn image_to_browser_base64(img: &ImageBuffer<Rgba<u8>, Vec<u8>>)-> Result<String> {
+    fn image_to_browser_base64(img: &ImageBuffer<Rgba<u8>, Vec<u8>>) -> Result<String> {
         let mut image_data: Vec<u8> = Vec::new();
         img.write_to(&mut Cursor::new(&mut image_data), ImageOutputFormat::Png)?;
         let res_base64 = general_purpose::STANDARD.encode(image_data);
@@ -348,7 +348,7 @@ pub mod scene {
     }
 
     pub fn white_img_placeholder(w: u32, h: u32) -> String {
-        let mut img = RgbaImage::new(w,h);
+        let img = RgbaImage::new(w, h);
         // img.iter_mut().for_each(|pixel| *pixel = 255);
         image_to_browser_base64(&img).unwrap()
     }
