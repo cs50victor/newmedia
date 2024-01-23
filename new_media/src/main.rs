@@ -1,4 +1,5 @@
 #![feature(ascii_char, async_closure, slice_pattern)]
+#[allow(clippy::type_complexity)]
 mod controls;
 mod frame_capture;
 mod server;
@@ -40,18 +41,18 @@ pub struct AudioSync {
 fn setup_gaussian_cloud(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
-    _gaussian_assets: ResMut<Assets<GaussianCloud>>,
+    mut gaussian_assets: ResMut<Assets<GaussianCloud>>,
     mut scene_controller: ResMut<frame_capture::scene::SceneController>,
     mut images: ResMut<Assets<Image>>,
     render_device: Res<RenderDevice>,
 ) {
     // let remote_file = Some("https://huggingface.co/datasets/cs50victor/splats/resolve/main/train/point_cloud/iteration_7000/point_cloud.gcloud");
     // TODO: figure out how to load remote files later
-    let splat_file = "splats/bonsai/point_cloud/iteration_7000/point_cloud.gcloud";
-    log::info!("loading {}", splat_file);
-    let cloud = asset_server.load(splat_file.to_string());
+    // let splat_file = "splats/bonsai/point_cloud/iteration_7000/point_cloud.gcloud";
+    // log::info!("loading {}", splat_file);
+    // let cloud = asset_server.load(splat_file.to_string());
 
-    // let cloud = gaussian_assets.add(GaussianCloud::test_model());
+    let cloud = gaussian_assets.add(GaussianCloud::test_model());
 
     let render_target = frame_capture::scene::setup_render_target(
         &mut commands,
@@ -106,6 +107,7 @@ fn main() {
 
     App::new()
     .insert_resource(frame_capture::scene::SceneController::new(config.width, config.height))
+    .insert_resource(frame_capture::scene::CurrImageBase64(frame_capture::scene::white_img_placeholder(config.width, config.height)))
     .insert_resource(ClearColor(Color::rgb_u8(0, 0, 0)))
     .add_plugins((
         bevy_web_asset::WebAssetPlugin,
@@ -134,6 +136,7 @@ fn main() {
         receive_message
     ))
     // .add_systems(OnEnter(AppState::Active), setup_gaussian_cloud)
+    .add_systems(Startup, setup_gaussian_cloud)
     .run();
 }
 

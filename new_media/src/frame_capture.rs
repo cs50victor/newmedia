@@ -182,11 +182,16 @@ pub mod image_copy {
 }
 pub mod scene {
 
+    use std::io::Cursor;
+
+    use anyhow::Result;
+    use base64::{engine::general_purpose, Engine};
     use bevy::{
         prelude::*,
         render::{camera::RenderTarget, renderer::RenderDevice},
     };
 
+    use image::{DynamicImage, ImageBuffer, ImageOutputFormat, Rgba, RgbaImage};
     use wgpu::{Extent3d, TextureDescriptor, TextureDimension, TextureFormat, TextureUsages};
 
     use super::image_copy::ImageCopier;
@@ -196,6 +201,9 @@ pub mod scene {
 
     #[derive(Component, Deref, DerefMut)]
     struct ImageToSave(Handle<Image>);
+
+    #[derive(Resource)]
+    pub struct CurrImageBase64(pub String);
 
     pub struct CaptureFramePlugin;
     impl Plugin for CaptureFramePlugin {
@@ -308,6 +316,7 @@ pub mod scene {
     fn update(
         mut images: ResMut<Assets<Image>>,
         images_to_save: Query<&ImageToSave>,
+        mut curr_base64_img: ResMut<CurrImageBase64>,
         single_frame_data: ResMut<crate::StreamingFrameData>,
         mut scene_controller: ResMut<SceneController>,
     ) {
@@ -323,16 +332,24 @@ pub mod scene {
                         Err(e) => panic!("Failed to create image buffer {e:?}"),
                     };
 
-                    let (_w, _h) = rgba_img.dimensions();
-
-                    // send image
+                    curr_base64_img.0 = image_to_browser_base64(&rgba_img).unwrap();
                 }
-                // if scene_controller.single_image {
-                //     app_exit_writer.send(AppExit);
-                // }
             } else {
                 scene_controller.state.decrement();
             }
         }
+    }
+
+    fn image_to_browser_base64(img: &ImageBuffer<Rgba<u8>, Vec<u8>>)-> Result<String> {
+        let mut image_data: Vec<u8> = Vec::new();
+        img.write_to(&mut Cursor::new(&mut image_data), ImageOutputFormat::Png)?;
+        let res_base64 = general_purpose::STANDARD.encode(image_data);
+        Ok(format!("data:image/png;base64,{}", res_base64))
+    }
+
+    pub fn white_img_placeholder(w: u32, h: u32) -> String {
+        let mut img = RgbaImage::new(w,h);
+        // img.iter_mut().for_each(|pixel| *pixel = 255);
+        image_to_browser_base64(&img).unwrap()
     }
 }
