@@ -18,7 +18,6 @@ pub mod image_copy {
     };
     use pollster::FutureExt;
     use wgpu::Maintain;
-    // use wgpu::Maintain;
 
     use std::sync::atomic::{AtomicBool, Ordering};
 
@@ -175,9 +174,9 @@ pub mod image_copy {
                     texture_extent,
                 );
 
-                let render_queue = world.get_resource::<RenderQueue>().unwrap();
+                let _render_queue = world.get_resource::<RenderQueue>().unwrap();
                 log::error!("0");
-                render_queue.submit(std::iter::once(encoder.finish()));
+                // render_queue.submit(std::iter::once(encoder.finish()));
                 log::error!("1");
             }
 
@@ -195,15 +194,12 @@ pub mod scene {
         prelude::*,
         render::{
             camera::RenderTarget,
-            render_resource::{
-                Extent3d, TextureDescriptor, TextureDimension, TextureFormat, TextureUsages,
-            },
             renderer::RenderDevice,
         },
     };
 
     use image::{ImageBuffer, ImageOutputFormat, Rgba, RgbaImage};
-    // use wgpu::{Extent3d, TextureDescriptor, TextureDimension, TextureFormat, TextureUsages};
+    use wgpu::{Extent3d, TextureDescriptor, TextureDimension, TextureFormat, TextureUsages};
 
     use super::image_copy::ImageCopier;
 

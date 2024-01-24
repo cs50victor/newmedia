@@ -1,13 +1,9 @@
 #![feature(ascii_char, async_closure, slice_pattern)]
-#[allow(clippy::type_complexity)]
 mod controls;
 mod frame_capture;
 mod server;
-mod video;
 
 use bevy_ws_server::WsPlugin;
-
-// use actix_web::{middleware, web::Data, App, HttpServer};
 
 use bevy::{
     app::ScheduleRunnerPlugin, core::Name, core_pipeline::tonemapping::Tonemapping, log::LogPlugin,
