@@ -1,6 +1,5 @@
 #![feature(ascii_char, async_closure, slice_pattern)]
 mod controls;
-mod frame_capture;
 mod server;
 
 use bevy_ws_server::WsPlugin;
@@ -24,7 +23,7 @@ fn setup_gaussian_cloud(
     mut commands: Commands,
     _asset_server: Res<AssetServer>,
     mut gaussian_assets: ResMut<Assets<GaussianCloud>>,
-    mut scene_controller: ResMut<frame_capture::scene::SceneController>,
+    mut scene_controller: ResMut<bevy_frame_capture::scene::SceneController>,
     mut images: ResMut<Assets<Image>>,
     render_device: Res<RenderDevice>,
 ) {
@@ -36,7 +35,7 @@ fn setup_gaussian_cloud(
 
     let cloud = gaussian_assets.add(GaussianCloud::test_model());
 
-    let render_target = frame_capture::scene::setup_render_target(
+    let render_target = bevy_frame_capture::scene::setup_render_target(
         &mut commands,
         &mut images,
         &render_device,
@@ -84,8 +83,8 @@ fn main() {
     let config = AppConfig { width: 1920, height: 1080 };
 
     App::new()
-    .insert_resource(frame_capture::scene::SceneController::new(config.width, config.height))
-    .insert_resource(frame_capture::scene::CurrImageBase64(frame_capture::scene::white_img_placeholder(config.width, config.height)))
+    .insert_resource(bevy_frame_capture::scene::SceneController::new(config.width, config.height))
+    .insert_resource(bevy_frame_capture::scene::CurrImageBase64(bevy_frame_capture::scene::white_img_placeholder(config.width, config.height)))
     .insert_resource(ClearColor(Color::rgb_u8(0, 0, 0)))
     .add_plugins((
         DefaultPlugins
@@ -96,14 +95,14 @@ fn main() {
                 close_when_requested: false,
             }).disable::<LogPlugin>(),
         WsPlugin,
-        frame_capture::image_copy::ImageCopyPlugin,
-        frame_capture::scene::CaptureFramePlugin,
+        bevy_frame_capture::image_copy::ImageCopyPlugin,
+        bevy_frame_capture::scene::CaptureFramePlugin,
         ScheduleRunnerPlugin::run_loop(std::time::Duration::from_secs_f64(1.0 / 60.0)),
         PanOrbitCameraPlugin,
         GaussianSplattingPlugin,
     ))
-    .init_resource::<frame_capture::scene::SceneController>()
-    .add_event::<frame_capture::scene::SceneController>()
+    .init_resource::<bevy_frame_capture::scene::SceneController>()
+    .add_event::<bevy_frame_capture::scene::SceneController>()
     .add_systems(Startup, (start_ws, setup_gaussian_cloud))
     .add_systems(Update, (
         move_camera,

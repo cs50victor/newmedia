@@ -7,15 +7,15 @@ use std::fmt::Debug;
 use bevy::prelude::*;
 use serde::{Deserialize, Serialize};
 
-use crate::frame_capture::scene::CurrImageBase64;
+use bevy_frame_capture::scene::CurrImageBase64;
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct ServerMsg<T> {
+pub struct HttpServerMsg<T> {
     data: Option<T>,
     error: Option<String>,
 }
 
-impl<T: ToString> ServerMsg<T> {
+impl<T: ToString> HttpServerMsg<T> {
     pub fn data(data: T) -> Self {
         Self { data: Some(data), error: None }
     }

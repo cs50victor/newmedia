@@ -2,6 +2,7 @@
 
 # Rust
 target/
+Cargo.lock
 
 # ggml binaries & other binaries in general
 *.bin

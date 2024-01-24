@@ -1,0 +1,17 @@
+[package]
+name = "bevy_frame_capture"
+version = "0.1.0"
+edition = "2021"
+rust-version.workspace = true
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = { workspace = true }
+bevy = { workspace = true }
+base64 = { workspace = true }
+image = { version = "0.24.7", default-features = false, features = ["png"] }
+pollster = "0.3.0"
+wgpu = { workspace = true }
+log = { workspace = true }
+futures-intrusive = "0.5.0"

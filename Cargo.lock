@@ -691,6 +691,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "bevy_frame_capture"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "base64",
+ "bevy",
+ "futures-intrusive",
+ "image",
+ "log",
+ "pollster",
+ "wgpu",
+]
+
+[[package]]
 name = "bevy_gaussian_splatting"
 version = "2.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1189,18 +1203,20 @@ dependencies = [
 
 [[package]]
 name = "bevy_ws_server"
-version = "0.2.1"
-source = "git+https://github.com/cs50victor/bevy-ws-server.git?branch=main#daaa533548c169a72c65270e74491d757c539273"
+version = "0.1.0"
 dependencies = [
  "anyhow",
  "async-channel 2.1.1",
  "async-native-tls",
  "async-net",
  "async-tungstenite",
+ "base64",
  "bevy",
  "crossbeam-channel",
  "futures",
+ "image",
  "log",
+ "pollster",
  "smol",
  "tungstenite",
 ]
@@ -2751,20 +2767,17 @@ dependencies = [
  "async-net",
  "base64",
  "bevy",
+ "bevy_frame_capture",
  "bevy_gaussian_splatting",
  "bevy_panorbit_camera",
  "bevy_ws_server",
  "crossbeam-channel",
  "dotenvy",
- "futures-intrusive",
- "image",
  "log",
- "pollster",
  "pretty_env_logger",
  "serde",
  "serde_json",
  "tungstenite",
- "wgpu",
 ]
 
 [[package]]
