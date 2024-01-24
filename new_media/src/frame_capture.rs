@@ -18,6 +18,7 @@ pub mod image_copy {
     };
     use pollster::FutureExt;
     use wgpu::Maintain;
+    // use wgpu::Maintain;
 
     use std::sync::atomic::{AtomicBool, Ordering};
 
@@ -42,7 +43,9 @@ pub mod image_copy {
                 buffer_slice.map_async(MapMode::Read, move |result| {
                     tx.send(result).unwrap();
                 });
+
                 render_device.poll(Maintain::Wait);
+
                 rx.receive().await.unwrap().unwrap();
                 if let Some(image) = images.get_mut(&image_copier.dst_image) {
                     image.data = buffer_slice.get_mapped_range().to_vec();
@@ -173,7 +176,9 @@ pub mod image_copy {
                 );
 
                 let render_queue = world.get_resource::<RenderQueue>().unwrap();
+                log::error!("0");
                 render_queue.submit(std::iter::once(encoder.finish()));
+                log::error!("1");
             }
 
             Ok(())
@@ -188,11 +193,17 @@ pub mod scene {
     use base64::{engine::general_purpose, Engine};
     use bevy::{
         prelude::*,
-        render::{camera::RenderTarget, renderer::RenderDevice},
+        render::{
+            camera::RenderTarget,
+            render_resource::{
+                Extent3d, TextureDescriptor, TextureDimension, TextureFormat, TextureUsages,
+            },
+            renderer::RenderDevice,
+        },
     };
 
     use image::{ImageBuffer, ImageOutputFormat, Rgba, RgbaImage};
-    use wgpu::{Extent3d, TextureDescriptor, TextureDimension, TextureFormat, TextureUsages};
+    // use wgpu::{Extent3d, TextureDescriptor, TextureDimension, TextureFormat, TextureUsages};
 
     use super::image_copy::ImageCopier;
 
@@ -332,6 +343,8 @@ pub mod scene {
                         Err(e) => panic!("Failed to create image buffer {e:?}"),
                     };
 
+                    rgba_img.save("wtf.png");
+                    log::info!("saved");
                     curr_base64_img.0 = image_to_browser_base64(&rgba_img).unwrap();
                 }
             } else {

@@ -27,23 +27,6 @@ impl<T: ToString> ServerMsg<T> {
     }
 }
 
-#[derive(Clone, Resource)]
-pub struct ShutdownBevyRemotely {
-    tx: crossbeam_channel::Sender<bool>,
-    rx: crossbeam_channel::Receiver<bool>,
-}
-
-impl FromWorld for ShutdownBevyRemotely {
-    fn from_world(_world: &mut World) -> Self {
-        let (tx, rx) = crossbeam_channel::unbounded::<bool>();
-        Self { tx, rx }
-    }
-}
-
-pub struct RoomData {
-    pub stream_frame_data: crate::StreamingFrameData,
-}
-
 pub fn start_ws(listener: Res<WsListener>) {
     let port = std::env::var("PORT")
         .unwrap_or_else(|_| "8080".to_string())

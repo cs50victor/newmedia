@@ -5,8 +5,6 @@ mod frame_capture;
 mod server;
 mod video;
 
-use std::sync::{atomic::AtomicBool, Arc};
-
 use bevy_ws_server::WsPlugin;
 
 // use actix_web::{middleware, web::Data, App, HttpServer};
@@ -19,23 +17,11 @@ use bevy_panorbit_camera::{PanOrbitCamera, PanOrbitCameraPlugin};
 
 use bevy_gaussian_splatting::{GaussianCloud, GaussianSplattingBundle, GaussianSplattingPlugin};
 
-use serde::{Deserialize, Serialize};
 use server::{receive_message, start_ws};
 
 #[derive(Resource)]
 pub struct StreamingFrameData {
     pixel_size: u32,
-}
-
-#[derive(Serialize, Deserialize)]
-struct RoomText {
-    message: String,
-    timestamp: i64,
-}
-
-#[derive(Resource)]
-pub struct AudioSync {
-    should_stop: Arc<AtomicBool>,
 }
 
 fn setup_gaussian_cloud(
@@ -68,11 +54,7 @@ fn setup_gaussian_cloud(
 
     commands.spawn((
         Camera3dBundle {
-            transform: Transform {
-                translation: Vec3::new(-0.59989005, -0.88360703, -2.0863006),
-                rotation: Quat::from_xyzw(-0.97177905, -0.026801618, 0.13693734, -0.1901983),
-                scale: Vec3::new(1.0, 1.0, 1.0),
-            },
+            transform: Transform::from_translation(Vec3::new(0.0, 1.5, 5.0)),
             tonemapping: Tonemapping::None,
             camera: Camera { target: render_target, ..default() },
             ..default()
@@ -110,10 +92,8 @@ fn main() {
     .insert_resource(frame_capture::scene::CurrImageBase64(frame_capture::scene::white_img_placeholder(config.width, config.height)))
     .insert_resource(ClearColor(Color::rgb_u8(0, 0, 0)))
     .add_plugins((
-        bevy_web_asset::WebAssetPlugin,
         DefaultPlugins
             .set(ImagePlugin::default_nearest())
-            // "headless" window
             .set(WindowPlugin {
                 primary_window: None,
                 exit_condition: bevy::window::ExitCondition::DontExit,
@@ -124,19 +104,16 @@ fn main() {
         frame_capture::scene::CaptureFramePlugin,
         ScheduleRunnerPlugin::run_loop(std::time::Duration::from_secs_f64(1.0 / 60.0)),
         PanOrbitCameraPlugin,
-        // plugin for gaussian splatting
         GaussianSplattingPlugin,
     ))
-    .insert_resource(AudioSync { should_stop: Arc::new(AtomicBool::new(false)) })
     .init_resource::<frame_capture::scene::SceneController>()
     .add_event::<frame_capture::scene::SceneController>()
-    .add_systems(Startup, start_ws)
+    .add_systems(Startup, (start_ws, setup_gaussian_cloud))
     .add_systems(Update, (
         move_camera,
         receive_message
     ))
     // .add_systems(OnEnter(AppState::Active), setup_gaussian_cloud)
-    .add_systems(Startup, setup_gaussian_cloud)
     .run();
 }
 
