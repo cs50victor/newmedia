@@ -1,13 +1,17 @@
 use async_net::SocketAddr;
 
-use bevy::prelude::*;
-use bevy::tasks::{IoTaskPool, Task};
+use bevy::{
+    prelude::*,
+    tasks::{IoTaskPool, Task},
+};
 use crossbeam_channel::{Receiver, Sender};
 use futures::{pin_mut, select, FutureExt};
 
-use std::net::{TcpListener, TcpStream};
-use std::pin::Pin;
-use std::task::{Context, Poll};
+use std::{
+    net::{TcpListener, TcpStream},
+    pin::Pin,
+    task::{Context, Poll},
+};
 
 use anyhow::{bail, Result};
 pub use async_channel::TryRecvError as ReceiveError;
@@ -97,7 +101,11 @@ impl WsListener {
         Self { ws_tx }
     }
 
-    pub fn listen(&self, bind_to: impl Into<SocketAddr>, tls: Option<TlsAcceptor>) -> Result<String> {
+    pub fn listen(
+        &self,
+        bind_to: impl Into<SocketAddr>,
+        tls: Option<TlsAcceptor>,
+    ) -> Result<String> {
         let listener = Async::<TcpListener>::bind(bind_to).expect("cannot bind to the address");
 
         let host = match &tls {
@@ -207,10 +215,6 @@ pub fn accept_ws_from_queue(mut commands: Commands, queue: ResMut<WsAcceptQueue>
                 }
             }
         });
-        commands.spawn(WsConnection {
-            _io: io,
-            sender: message_tx,
-            receiver: message_rx,
-        });
+        commands.spawn(WsConnection { _io: io, sender: message_tx, receiver: message_rx });
     }
 }

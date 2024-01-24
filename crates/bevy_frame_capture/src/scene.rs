@@ -4,10 +4,7 @@ use anyhow::Result;
 use base64::{engine::general_purpose, Engine};
 use bevy::{
     prelude::*,
-    render::{
-        camera::RenderTarget,
-        renderer::RenderDevice,
-    },
+    render::{camera::RenderTarget, renderer::RenderDevice},
 };
 
 use image::{ImageBuffer, ImageOutputFormat, Rgba, RgbaImage};
@@ -32,10 +29,7 @@ pub struct StreamingFrameData {
 pub struct CaptureFramePlugin;
 impl Plugin for CaptureFramePlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(
-            PostUpdate,
-            update.run_if(resource_exists::<StreamingFrameData>()),
-        );
+        app.add_systems(PostUpdate, update.run_if(resource_exists::<StreamingFrameData>()));
     }
 }
 

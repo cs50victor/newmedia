@@ -11,8 +11,8 @@ use bevy::{
 };
 
 use bevy::render::render_resource::{
-    Buffer, BufferDescriptor, BufferUsages, CommandEncoderDescriptor, Extent3d,
-    ImageCopyBuffer, ImageDataLayout, MapMode,
+    Buffer, BufferDescriptor, BufferUsages, CommandEncoderDescriptor, Extent3d, ImageCopyBuffer,
+    ImageDataLayout, MapMode,
 };
 use pollster::FutureExt;
 use wgpu::Maintain;
@@ -113,9 +113,8 @@ impl ImageCopier {
 }
 
 pub fn image_copy_extract(mut commands: Commands, image_copiers: Extract<Query<&ImageCopier>>) {
-    commands.insert_resource(ImageCopiers(
-        image_copiers.iter().cloned().collect::<Vec<ImageCopier>>(),
-    ));
+    commands
+        .insert_resource(ImageCopiers(image_copiers.iter().cloned().collect::<Vec<ImageCopier>>()));
 }
 
 #[derive(Default)]
@@ -162,9 +161,7 @@ impl render_graph::Node for ImageCopyDriver {
                     layout: ImageDataLayout {
                         offset: 0,
                         bytes_per_row: Some(
-                            std::num::NonZeroU32::new(padded_bytes_per_row as u32)
-                                .unwrap()
-                                .into(),
+                            std::num::NonZeroU32::new(padded_bytes_per_row as u32).unwrap().into(),
                         ),
                         rows_per_image: None,
                     },
