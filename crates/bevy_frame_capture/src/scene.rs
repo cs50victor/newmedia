@@ -208,7 +208,6 @@
         name: String,
         width: u32,
         height: u32,
-        single_image: bool,
     }
 
     impl SceneController {
@@ -218,7 +217,6 @@
                 name: String::from(""),
                 width,
                 height,
-                single_image,
             }
         }
     }
