@@ -29,8 +29,8 @@ export default function WebSocketExample({port = 8080}:{port?:number}){
       try {
         const data = JSON.parse(event.data);
         console.log("WebSocket Message:", data);
-        if (data.images && data.images.length > 0) {
-          setImgUrl(data.images[0]);
+        if (data.image) {
+          setImgUrl(data.image);
         }
       } catch (e) {
         console.error("Error parsing the WebSocket response:", e);
