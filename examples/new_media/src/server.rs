@@ -7,7 +7,7 @@ use std::fmt::Debug;
 use bevy::prelude::*;
 use serde::{Deserialize, Serialize};
 
-use bevy_frame_capture::scene::CurrImageBase64;
+use bevy_frame_capture::CurrImageBase64;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct HttpServerMsg<T> {
@@ -32,7 +32,6 @@ pub fn start_ws(listener: Res<WsListener>) {
         .unwrap_or_else(|_| "8080".to_string())
         .parse::<u16>()
         .expect("PORT couldn't be set");
-    info!("starting HTTP server on port {port}");
 
     match listener.listen(([127, 0, 0, 1], port), None) {
         Ok(host) => {

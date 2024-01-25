@@ -10,8 +10,8 @@ anyhow = {workspace = true}
 async-net = {workspace = true}
 base64 = {workspace = true}
 bevy =  { workspace = true }
-bevy_ws_server = { path = "../bevy_ws_server" }
-bevy_frame_capture = { path = "../bevy_frame_capture" }
+bevy_ws_server = { path = "../../crates/bevy_ws_server" }
+bevy_frame_capture = { path = "../../crates/bevy_frame_capture" }
 bevy_gaussian_splatting = { version = "2.0.2", default-features = true }
 bevy_panorbit_camera = { workspace = true }
 crossbeam-channel = { workspace = true }

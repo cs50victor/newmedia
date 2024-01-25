@@ -21,8 +21,6 @@ use futures::sink::{Sink, SinkExt};
 use smol::{prelude::*, Async};
 use tungstenite::Message;
 
-// use tungstenite::Message;
-
 pub struct WsPlugin;
 
 impl Plugin for WsPlugin {

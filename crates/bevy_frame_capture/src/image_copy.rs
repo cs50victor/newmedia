@@ -40,9 +40,7 @@ pub fn receive_images(
             buffer_slice.map_async(MapMode::Read, move |result| {
                 tx.send(result).unwrap();
             });
-
             render_device.poll(Maintain::Wait);
-
             rx.receive().await.unwrap().unwrap();
             if let Some(image) = images.get_mut(&image_copier.dst_image) {
                 image.data = buffer_slice.get_mapped_range().to_vec();

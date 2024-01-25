@@ -1,8 +1,7 @@
-#![feature(ascii_char, async_closure, slice_pattern)]
 mod controls;
-mod server;
+// mod server;
 
-use bevy_ws_server::WsPlugin;
+// use bevy_ws_server::WsPlugin;
 
 use bevy::{
     app::ScheduleRunnerPlugin, core::Name, core_pipeline::tonemapping::Tonemapping, log::LogPlugin,
@@ -12,18 +11,13 @@ use bevy_panorbit_camera::{PanOrbitCamera, PanOrbitCameraPlugin};
 
 use bevy_gaussian_splatting::{GaussianCloud, GaussianSplattingBundle, GaussianSplattingPlugin};
 
-use server::{receive_message, start_ws};
-
-#[derive(Resource)]
-pub struct StreamingFrameData {
-    pixel_size: u32,
-}
+// use server::{receive_message, start_ws};
 
 fn setup_gaussian_cloud(
     mut commands: Commands,
     _asset_server: Res<AssetServer>,
     mut gaussian_assets: ResMut<Assets<GaussianCloud>>,
-    mut scene_controller: ResMut<bevy_frame_capture::scene::SceneController>,
+    mut scene_controller: ResMut<bevy_frame_capture::SceneInfo>,
     mut images: ResMut<Assets<Image>>,
     render_device: Res<RenderDevice>,
 ) {
@@ -35,7 +29,7 @@ fn setup_gaussian_cloud(
 
     let cloud = gaussian_assets.add(GaussianCloud::test_model());
 
-    let render_target = bevy_frame_capture::scene::setup_render_target(
+    let render_target = bevy_frame_capture::setup_render_target(
         &mut commands,
         &mut images,
         &render_device,
@@ -83,8 +77,8 @@ fn main() {
     let config = AppConfig { width: 1920, height: 1080 };
 
     App::new()
-    .insert_resource(bevy_frame_capture::scene::SceneController::new(config.width, config.height))
-    .insert_resource(bevy_frame_capture::scene::CurrImageBase64(bevy_frame_capture::scene::white_img_placeholder(config.width, config.height)))
+    .insert_resource(bevy_frame_capture::SceneInfo::new(config.width, config.height))
+    .insert_resource(bevy_frame_capture::CurrImageBase64(bevy_frame_capture::white_img_placeholder(config.width, config.height)))
     .insert_resource(ClearColor(Color::rgb_u8(0, 0, 0)))
     .add_plugins((
         DefaultPlugins
@@ -94,19 +88,16 @@ fn main() {
                 exit_condition: bevy::window::ExitCondition::DontExit,
                 close_when_requested: false,
             }).disable::<LogPlugin>(),
-        WsPlugin,
-        bevy_frame_capture::image_copy::ImageCopyPlugin,
-        bevy_frame_capture::scene::CaptureFramePlugin,
+        // WsPlugin,
+        bevy_frame_capture::FrameCapturePlugin,
         ScheduleRunnerPlugin::run_loop(std::time::Duration::from_secs_f64(1.0 / 60.0)),
         PanOrbitCameraPlugin,
         GaussianSplattingPlugin,
     ))
-    .init_resource::<bevy_frame_capture::scene::SceneController>()
-    .add_event::<bevy_frame_capture::scene::SceneController>()
-    .add_systems(Startup, (start_ws, setup_gaussian_cloud))
+    .add_systems(Startup, setup_gaussian_cloud)
     .add_systems(Update, (
         move_camera,
-        receive_message
+        // receive_message
     ))
     // .add_systems(OnEnter(AppState::Active), setup_gaussian_cloud)
     .run();
