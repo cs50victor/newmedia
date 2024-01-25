@@ -8,6 +8,6 @@ rust-version.workspace = true
 
 [dependencies]
 bevy = { workspace = true }
-bevy_frame_capture = { path = "../bevy_frame_capture"}
+bevy_frame_capture = { path = "../../crates/bevy_frame_capture"}
 log = { workspace = true }
 pretty_env_logger = { workspace = true }

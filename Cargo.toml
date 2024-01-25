@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["crates/*"]
+members = ["crates/*", "examples/*"]
 
 package.rust-version = "1.75.0"
 

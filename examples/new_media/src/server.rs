@@ -7,7 +7,7 @@ use std::fmt::Debug;
 use bevy::prelude::*;
 use serde::{Deserialize, Serialize};
 
-use bevy_frame_capture::scene::CurrImageBase64;
+use bevy_frame_capture::CurrImageBase64;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct HttpServerMsg<T> {
