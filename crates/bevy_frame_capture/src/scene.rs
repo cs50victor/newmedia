@@ -161,35 +161,29 @@
 //     }
 // }
 
-// fn image_to_browser_base64(img: &ImageBuffer<Rgba<u8>, Vec<u8>>) -> Result<String> {
-//     let mut image_data: Vec<u8> = Vec::new();
-//     img.write_to(&mut Cursor::new(&mut image_data), ImageOutputFormat::Png)?;
-//     let res_base64 = general_purpose::STANDARD.encode(image_data);
-//     Ok(format!("data:image/png;base64,{}", res_base64))
-// }
-
-// pub fn white_img_placeholder(w: u32, h: u32) -> String {
-//     let img = RgbaImage::new(w, h);
-//     // img.iter_mut().for_each(|pixel| *pixel = 255);
-//     image_to_browser_base64(&img).unwrap()
-// }
 
 
 
 
-    use std::path::PathBuf;
 
+    use std::{io::Cursor, path::PathBuf};
+
+    use base64::{engine::general_purpose, Engine};
     use bevy::{
         app::AppExit,
         prelude::*,
         render::{camera::RenderTarget, renderer::RenderDevice},
     };
+    use image::{ImageBuffer, ImageOutputFormat, Rgba, RgbaImage};
     use wgpu::{Extent3d, TextureDescriptor, TextureDimension, TextureFormat, TextureUsages};
 
     use super::image_copy::ImageCopier;
 
     #[derive(Component, Default)]
     pub struct CaptureCamera;
+    
+    #[derive(Resource)]
+    pub struct CurrImageBase64(pub String);
 
     #[derive(Component, Deref, DerefMut)]
     struct ImageToSave(Handle<Image>);
@@ -211,7 +205,7 @@
     }
 
     impl SceneController {
-        pub fn new(width: u32, height: u32, single_image: bool) -> SceneController {
+        pub fn new(width: u32, height: u32) -> SceneController {
             SceneController {
                 state: SceneState::BuildScene,
                 name: String::from(""),
@@ -297,7 +291,6 @@
         images_to_save: Query<&ImageToSave>,
         mut images: ResMut<Assets<Image>>,
         mut scene_controller: ResMut<SceneController>,
-        mut app_exit_writer: EventWriter<AppExit>,
     ) {
         if let SceneState::Render(n) = scene_controller.state {
             if n < 1 {
@@ -311,7 +304,7 @@
 
                     let images_dir =
                         PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("test_images");
-                    print!("Saving image to: {:?}\n", images_dir);
+                    println!("Saving image to: {images_dir:?}");
                     std::fs::create_dir_all(&images_dir).unwrap();
 
                     let uuid = bevy::utils::Uuid::new_v4();
@@ -325,3 +318,17 @@
             }
         }
     }
+
+// useful utils
+fn image_to_browser_base64(img: &ImageBuffer<Rgba<u8>, Vec<u8>>) -> anyhow::Result<String> {
+    let mut image_data: Vec<u8> = Vec::new();
+    img.write_to(&mut Cursor::new(&mut image_data), ImageOutputFormat::Png)?;
+    let res_base64 = general_purpose::STANDARD.encode(image_data);
+    Ok(format!("data:image/png;base64,{}", res_base64))
+}
+
+pub fn white_img_placeholder(w: u32, h: u32) -> String {
+    let img = RgbaImage::new(w, h);
+    // img.iter_mut().for_each(|pixel| *pixel = 255);
+    image_to_browser_base64(&img).unwrap()
+}

@@ -21,7 +21,6 @@ fn headless_app() {
     app.insert_resource(bevy_frame_capture::scene::SceneController::new(
         config.width,
         config.height,
-        true
     ));
 
     app.insert_resource(ClearColor(Color::rgb_u8(0, 0, 0)));

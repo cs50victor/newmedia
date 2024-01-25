@@ -4,6 +4,8 @@
 target/
 Cargo.lock
 
+**/test_images
+
 # ggml binaries & other binaries in general
 *.bin
 # local splat files
