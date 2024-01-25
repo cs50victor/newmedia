@@ -5,7 +5,7 @@ mod scene;
 use bevy::app::{App, Plugin, PostUpdate};
 use image_copy::ImageCopyPlugin;
 use scene::update;
-pub use scene::{SceneInfo,setup_render_target, white_img_placeholder, CurrImageBase64};
+pub use scene::{setup_render_target, white_img_placeholder, CurrImageBase64, SceneInfo};
 
 pub struct FrameCapturePlugin;
 

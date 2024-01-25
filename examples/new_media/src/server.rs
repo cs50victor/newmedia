@@ -32,7 +32,6 @@ pub fn start_ws(listener: Res<WsListener>) {
         .unwrap_or_else(|_| "8080".to_string())
         .parse::<u16>()
         .expect("PORT couldn't be set");
-    info!("starting HTTP server on port {port}");
 
     match listener.listen(([127, 0, 0, 1], port), None) {
         Ok(host) => {

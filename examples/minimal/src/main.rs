@@ -27,27 +27,18 @@ fn setup(
 }
 
 fn headless_app() {
-    let mut app = App::new();
-
-    // setup frame capture
-    app.insert_resource(bevy_frame_capture::SceneInfo::new(1920, 1080));
-
-    app.insert_resource(ClearColor(Color::rgb_u8(0, 0, 0)));
-
-    app.add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()).set(WindowPlugin {
-        primary_window: None,
-        exit_condition: bevy::window::ExitCondition::DontExit,
-        close_when_requested: false,
-    }));
-
-    // headless frame capture
-    app.add_plugins(bevy_frame_capture::FrameCapturePlugin);
-
-    app.add_plugins(ScheduleRunnerPlugin::run_loop(std::time::Duration::from_secs_f64(1.0 / 60.0)));
-
-    app.add_systems(Startup, setup);
-
-    app.run();
+    App::new()
+        .insert_resource(bevy_frame_capture::SceneInfo::new(1920, 1080))
+        .insert_resource(ClearColor(Color::rgb_u8(0, 0, 0)))
+        .add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()).set(WindowPlugin {
+            primary_window: None,
+            exit_condition: bevy::window::ExitCondition::DontExit,
+            close_when_requested: false,
+        }))
+        .add_plugins(bevy_frame_capture::FrameCapturePlugin)
+        .add_plugins(ScheduleRunnerPlugin::run_loop(std::time::Duration::from_secs_f64(1.0 / 60.0)))
+        .add_systems(Startup, setup)
+        .run()
 }
 
 pub fn main() {

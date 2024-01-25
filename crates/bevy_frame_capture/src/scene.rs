@@ -130,21 +130,21 @@ pub fn update(
 
                 let rgba_img = img_bytes.clone().try_into_dynamic().unwrap().to_rgba8();
 
-                if let Some(base64_img) = curr_base64_img.as_mut(){
+                if let Some(base64_img) = curr_base64_img.as_mut() {
                     base64_img.0 = image_to_browser_base64(&rgba_img).unwrap();
+                    log::info!("updated current image");
                 } else {
                     let images_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("test_images");
                     log::info!("Saving image to: {images_dir:?}");
-                    
+
                     std::fs::create_dir_all(&images_dir).unwrap();
-    
+
                     let uuid = bevy::utils::Uuid::new_v4();
                     let image_path = images_dir.join(format!("{uuid}.png"));
                     if let Err(e) = rgba_img.save(image_path) {
                         panic!("Failed to save image: {}", e);
                     };
                 };
-
             }
         } else {
             scene_controller.state.decrement();

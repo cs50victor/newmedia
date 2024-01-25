@@ -1,8 +1,7 @@
-#![feature(ascii_char, async_closure, slice_pattern)]
 mod controls;
-mod server;
+// mod server;
 
-use bevy_ws_server::WsPlugin;
+// use bevy_ws_server::WsPlugin;
 
 use bevy::{
     app::ScheduleRunnerPlugin, core::Name, core_pipeline::tonemapping::Tonemapping, log::LogPlugin,
@@ -12,12 +11,7 @@ use bevy_panorbit_camera::{PanOrbitCamera, PanOrbitCameraPlugin};
 
 use bevy_gaussian_splatting::{GaussianCloud, GaussianSplattingBundle, GaussianSplattingPlugin};
 
-use server::{receive_message, start_ws};
-
-#[derive(Resource)]
-pub struct StreamingFrameData {
-    pixel_size: u32,
-}
+// use server::{receive_message, start_ws};
 
 fn setup_gaussian_cloud(
     mut commands: Commands,
@@ -94,16 +88,16 @@ fn main() {
                 exit_condition: bevy::window::ExitCondition::DontExit,
                 close_when_requested: false,
             }).disable::<LogPlugin>(),
-        WsPlugin,
+        // WsPlugin,
         bevy_frame_capture::FrameCapturePlugin,
         ScheduleRunnerPlugin::run_loop(std::time::Duration::from_secs_f64(1.0 / 60.0)),
         PanOrbitCameraPlugin,
         GaussianSplattingPlugin,
     ))
-    .add_systems(Startup, (start_ws, setup_gaussian_cloud))
+    .add_systems(Startup, setup_gaussian_cloud)
     .add_systems(Update, (
         move_camera,
-        receive_message
+        // receive_message
     ))
     // .add_systems(OnEnter(AppState::Active), setup_gaussian_cloud)
     .run();
