@@ -12,15 +12,14 @@ use bevy::{
         texture::Image,
     },
 };
-use std::{default, io::Cursor, ops::Deref};
+use std::{io::Cursor, ops::Deref};
 
 use base64::{engine::general_purpose, Engine};
 use image::{EncodableLayout, ImageBuffer, ImageOutputFormat, Pixel, Rgba, RgbaImage};
 
 use crate::{ImageExportBundle, ImageExportSource};
 
-
-#[derive(Default,Resource)]
+#[derive(Default, Resource)]
 pub struct CurrImage {
     pub img_buffer: ImageBuffer<Rgba<u8>, Vec<u8>>,
     pub frame_id: u64,
@@ -60,7 +59,6 @@ impl CurrImage {
     pub fn to_web_base64(&self) -> anyhow::Result<String> {
         base64_browser_img(&self.img_buffer)
     }
-
 }
 
 #[derive(Debug, Default, Resource, Event)]

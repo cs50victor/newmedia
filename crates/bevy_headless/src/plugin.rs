@@ -2,13 +2,20 @@ use std::sync::Arc;
 
 use crate::{
     node::{ImageExportNode, NODE_NAME},
-    utils::{CurrImage},
+    utils::CurrImage,
 };
 use bevy::{
     app::{App, Plugin, PluginGroup, PostUpdate},
     asset::{Asset, AssetApp, Handle},
     ecs::{
-        bundle::Bundle, component::Component, entity::Entity, query::{QueryItem, With, Without}, schedule::{apply_deferred, IntoSystemConfigs, IntoSystemSetConfigs, SystemSet}, system::{lifetimeless::SRes, Commands, Local, Query, Res, ResMut, Resource, SystemParamItem}, world::Mut
+        bundle::Bundle,
+        component::Component,
+        entity::Entity,
+        query::{QueryItem, With, Without},
+        schedule::{apply_deferred, IntoSystemConfigs, IntoSystemSetConfigs, SystemSet},
+        system::{
+            lifetimeless::SRes, Commands, Local, Query, Res, ResMut, Resource, SystemParamItem,
+        },
     },
     log::LogPlugin,
     reflect::{Reflect, TypeUuid},
@@ -237,7 +244,6 @@ fn capture_img_bytes<P: Pixel + PixelWithColorType>(
             // }else{
             //     log::info!("Curr Image Resource still doesn't exist");
             // }
-
         },
         None => {
             log::error!("Failed creating image buffer for frame - '{frame_id}'");
@@ -268,11 +274,11 @@ impl Plugin for ImageExportPlugin {
                 .disable::<LogPlugin>(),
         );
 
-        // TODO: 
+        // TODO:
         let curr_image_container = CurrImageContainer::default();
 
         app.insert_resource(curr_image_container.clone());
-        
+
         app.configure_sets(
             PostUpdate,
             (SetupImageExport, SetupImageExportFlush).chain().before(CameraUpdateSystem),
@@ -293,7 +299,7 @@ impl Plugin for ImageExportPlugin {
         );
 
         let render_app = app.sub_app_mut(RenderApp);
-        
+
         render_app.insert_resource(curr_image_container);
 
         render_app.add_systems(
@@ -305,8 +311,6 @@ impl Plugin for ImageExportPlugin {
 
         graph.add_node(NODE_NAME, ImageExportNode);
         graph.add_node_edge(CAMERA_DRIVER, NODE_NAME);
-    
-
     }
 }
 

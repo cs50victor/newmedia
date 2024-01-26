@@ -25,7 +25,7 @@ use server::{receive_message, start_ws};
 fn setup_gaussian_cloud(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
-    mut gaussian_assets: ResMut<Assets<GaussianCloud>>,
+    _gaussian_assets: ResMut<Assets<GaussianCloud>>,
     mut scene_controller: ResMut<bevy_headless::SceneInfo>,
     mut images: ResMut<Assets<Image>>,
     export_sources: ResMut<Assets<ImageExportSource>>,
@@ -107,4 +107,3 @@ fn move_camera(mut camera: Query<&mut Transform, With<Camera>>) {
         transform.translation.z += speed;
     }
 }
-

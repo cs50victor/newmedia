@@ -4,8 +4,8 @@ mod plugin;
 mod utils;
 
 pub use plugin::{
-    GpuImageExportSource, ImageExportBundle, ImageExportPlugin, ImageExportSettings,
-    ImageExportSource, ImageExportSystems, CurrImageContainer
+    CurrImageContainer, GpuImageExportSource, ImageExportBundle, ImageExportPlugin,
+    ImageExportSettings, ImageExportSource, ImageExportSystems,
 };
 
-pub use utils::{setup_render_target,SceneInfo};
+pub use utils::{setup_render_target, SceneInfo};
