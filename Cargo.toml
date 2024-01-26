@@ -20,7 +20,6 @@ panic = "abort"   # Abort on panic, instead of unwinding the stack.
 inherits = "release"
 strip = true         # Automatically strip symbols from the binary.
 
-
 [workspace.dependencies]
 anyhow = "1.0.75"
 async-net = "2.0.0"
@@ -29,10 +28,11 @@ bevy = { version = "0.12.1", default-features = false, features = [
   "bevy_asset",
   "bevy_core_pipeline",
   "bevy_render",
+  "multi-threaded"
 ] }
 bevy_panorbit_camera = "0.10.0"
 crossbeam-channel = "0.5.10"
 log = "0.4.20"
 pretty_env_logger = "0.5.0"
-wgpu = { version = "0.17.1", features = ["vulkan-portability"] }
+wgpu = "0.17.2"
 tungstenite = "0.21.0"

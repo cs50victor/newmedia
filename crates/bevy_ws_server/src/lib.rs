@@ -1,11 +1,17 @@
+// Derived from https://github.com/kiwiyou/bevy-ws-server
+
 use async_net::SocketAddr;
 
 use bevy::{
-    prelude::*,
+    app::{App, Plugin, Update},
+    ecs::{
+        component::Component,
+        system::{Commands, ResMut, Resource},
+    },
     tasks::{IoTaskPool, Task},
 };
 use crossbeam_channel::{Receiver, Sender};
-use futures::{pin_mut, select, FutureExt};
+use futures::{pin_mut, select, FutureExt, Stream};
 
 use std::{
     net::{TcpListener, TcpStream},
@@ -18,7 +24,7 @@ pub use async_channel::TryRecvError as ReceiveError;
 use async_native_tls::{TlsAcceptor, TlsStream};
 use async_tungstenite::{tungstenite, WebSocketStream};
 use futures::sink::{Sink, SinkExt};
-use smol::{prelude::*, Async};
+use smol::{stream::StreamExt, Async};
 use tungstenite::Message;
 
 pub struct WsPlugin;
@@ -43,7 +49,7 @@ pub struct WsAcceptQueue {
 }
 
 /// A WebSocket or WebSocket+TLS connection.
-enum WsStream {
+pub enum WsStream {
     /// A plain WebSocket connection.
     Plain(WebSocketStream<Async<TcpStream>>),
 

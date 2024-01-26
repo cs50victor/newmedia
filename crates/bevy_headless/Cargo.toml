@@ -1,0 +1,17 @@
+[package]
+name = "bevy_headless"
+version = "0.1.0"
+edition = "2021"
+rust-version.workspace = true
+
+[dependencies]
+anyhow = { workspace = true }
+base64 = { workspace = true }
+bevy = { workspace = true }
+bytemuck = "1.14.1"
+futures = "0.3.30"
+futures-lite = "2.2.0"
+image = { version = "0.24.8", features = ["exr", "png", "jpeg", "webp"], default-features = false }
+wgpu = { workspace = true }
+log = { workspace = true }
+parking_lot = "0.12.1"
