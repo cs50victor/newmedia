@@ -45,7 +45,7 @@ export default function WebSocketExample({port = 8080}:{port?:number}){
   return (
     <div>
       {imgUrl ? (
-        <div className="h-[80vh] w-[80vw] relative">
+        <div className="h-[80vh] w-[80vw] relative border">
             <Image
               className="rounded"
               src={imgUrl}

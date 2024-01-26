@@ -1,13 +1,15 @@
+use bevy::ecs::{
+    entity::Entity,
+    system::{Commands, Query, Res},
+};
+use bevy_headless::CurrImageContainer;
 use bevy_ws_server::{ReceiveError, WsConnection, WsListener};
 use log::info;
 use serde_json::json;
 
 use std::fmt::Debug;
 
-use bevy::prelude::*;
 use serde::{Deserialize, Serialize};
-
-use bevy_frame_capture::CurrImageBase64;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct HttpServerMsg<T> {
@@ -45,7 +47,7 @@ pub fn start_ws(listener: Res<WsListener>) {
 
 pub fn receive_message(
     mut commands: Commands,
-    curr_base64_img: Res<CurrImageBase64>,
+    curr_image: Res<CurrImageContainer>,
     connections: Query<(Entity, &WsConnection)>,
 ) {
     for (entity, conn) in connections.iter() {
@@ -55,7 +57,7 @@ pub fn receive_message(
                     info!("message | {message:?}");
                     let resp = tungstenite::protocol::Message::Text(
                         json!({
-                            "image": curr_base64_img.0
+                            "image": curr_image.0.lock().to_web_base64().unwrap()
                         })
                         .to_string(),
                     );
