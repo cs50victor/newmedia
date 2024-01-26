@@ -21,9 +21,9 @@ inherits = "release"
 strip = true         # Automatically strip symbols from the binary.
 
 [workspace.dependencies]
-anyhow = "1.0.75"
+anyhow = "1.0.79"
 async-net = "2.0.0"
-base64 = "0.21.5"
+base64 = "0.21.7"
 bevy = { version = "0.12.1", default-features = false, features = [
   "bevy_asset",
   "bevy_core_pipeline",
@@ -31,8 +31,8 @@ bevy = { version = "0.12.1", default-features = false, features = [
   "multi-threaded"
 ] }
 bevy_panorbit_camera = "0.10.0"
-crossbeam-channel = "0.5.10"
+crossbeam-channel = "0.5.11"
 log = "0.4.20"
 pretty_env_logger = "0.5.0"
-wgpu = "0.17.2"
+wgpu = "0.19.1"
 tungstenite = "0.21.0"

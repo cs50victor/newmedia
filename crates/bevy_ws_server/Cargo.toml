@@ -9,11 +9,11 @@ anyhow = {workspace = true}
 base64 = {workspace = true}
 bevy = { version = "0.12.1", default-features = false, features = ["multi-threaded"] }
 async-net = {workspace = true}
-futures = "0.3.29"
+futures = "0.3.30"
 async-tungstenite = "0.24.0"
 log = {workspace = true}
 crossbeam-channel = {workspace = true}
-async-channel = "2.1.0"
+async-channel = "2.1.1"
 async-native-tls = "0.5.0"
 smol = "2.0.0"
 tungstenite = {workspace = true}
