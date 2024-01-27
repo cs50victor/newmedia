@@ -253,7 +253,7 @@ fn capture_img_bytes<P: Pixel + PixelWithColorType>(
 
 /// Plugin enabling the generation of image sequences.
 #[derive(Default)]
-pub struct ImageExportPlugin;
+pub struct HeadlessPlugin;
 
 #[derive(Debug, Hash, PartialEq, Eq, Clone, SystemSet)]
 pub enum ImageExportSystems {
@@ -261,7 +261,7 @@ pub enum ImageExportSystems {
     SetupImageExportFlush,
 }
 
-impl Plugin for ImageExportPlugin {
+impl Plugin for HeadlessPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins(
             DefaultPlugins

@@ -8,7 +8,7 @@ use bevy::{
     transform::components::Transform,
     utils::default,
 };
-use bevy_headless::{CurrImageContainer, ImageExportPlugin, ImageExportSource};
+use bevy_headless::{CurrImageContainer, HeadlessPlugin, ImageExportSource};
 
 fn setup(
     mut commands: Commands,
@@ -55,11 +55,10 @@ pub fn main() {
     let (w, h) = (1920, 1080);
 
     Engine::new()
-        // .insert_resource(CurrImage::default())
         .insert_resource(bevy_headless::SceneInfo::new(w, h))
         .insert_resource(ClearColor(Color::rgb_u8(0, 0, 0)))
         .add_plugins((
-            ImageExportPlugin,
+            HeadlessPlugin,
             ScheduleRunnerPlugin::run_loop(std::time::Duration::from_secs_f64(1.0 / 60.0)),
         ))
         .add_systems(Startup, setup)
