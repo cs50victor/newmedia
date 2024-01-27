@@ -7,15 +7,14 @@ use bevy::{
     core::Name,
     core_pipeline::{clear_color::ClearColor, core_3d::Camera3dBundle, tonemapping::Tonemapping},
     ecs::{
-        query::With,
-        system::{Commands, Query, Res, ResMut},
+        system::{Commands,  Res, ResMut},
     },
     math::Vec3,
     render::{camera::Camera, color::Color, texture::Image},
     transform::components::Transform,
     utils::default,
 };
-use bevy_headless::{ImageExportPlugin, ImageExportSource};
+use bevy_headless::{HeadlessPlugin, ImageExportSource};
 use bevy_panorbit_camera::{PanOrbitCamera, PanOrbitCameraPlugin};
 
 use bevy_gaussian_splatting::{GaussianCloud, GaussianSplattingBundle, GaussianSplattingPlugin};
@@ -88,22 +87,13 @@ fn main() {
         .insert_resource(bevy_headless::SceneInfo::new(config.width, config.height))
         .insert_resource(ClearColor(Color::rgb_u8(255, 255, 255)))
         .add_plugins((
-            ImageExportPlugin,
+            HeadlessPlugin,
             WsPlugin,
             ScheduleRunnerPlugin::run_loop(std::time::Duration::from_secs_f64(1.0 / 60.0)),
             PanOrbitCameraPlugin,
             GaussianSplattingPlugin,
         ))
         .add_systems(Startup, (start_ws, setup_gaussian_cloud))
-        .add_systems(Update, (move_camera, receive_message))
+        .add_systems(Update, receive_message)
         .run();
-}
-
-fn move_camera(mut camera: Query<&mut Transform, With<Camera>>) {
-    let speed = 0.0005;
-    for mut transform in camera.iter_mut() {
-        transform.translation.x += speed;
-        transform.translation.y += speed;
-        transform.translation.z += speed;
-    }
 }
