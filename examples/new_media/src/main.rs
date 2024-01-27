@@ -6,9 +6,7 @@ use bevy::{
     asset::{AssetServer, Assets},
     core::Name,
     core_pipeline::{clear_color::ClearColor, core_3d::Camera3dBundle, tonemapping::Tonemapping},
-    ecs::{
-        system::{Commands,  Res, ResMut},
-    },
+    ecs::system::{Commands, Res, ResMut},
     math::Vec3,
     render::{camera::Camera, color::Color, texture::Image},
     transform::components::Transform,
