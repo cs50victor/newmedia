@@ -59,6 +59,11 @@ impl CurrImage {
     pub fn to_web_base64(&self) -> anyhow::Result<String> {
         base64_browser_img(&self.img_buffer)
     }
+
+    pub fn dimensions(&self) -> [u32; 2] {
+        let (w, h) = self.img_buffer.dimensions();
+        [w, h]
+    }
 }
 
 #[derive(Debug, Default, Resource, Event)]
