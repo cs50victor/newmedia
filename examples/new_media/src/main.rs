@@ -17,6 +17,7 @@ use bevy_panorbit_camera::{PanOrbitCamera, PanOrbitCameraPlugin};
 
 use bevy_gaussian_splatting::{GaussianCloud, GaussianSplattingBundle, GaussianSplattingPlugin};
 use bevy_ws_server::WsPlugin;
+use controls::{update_world_from_input, WorldControlChannel};
 use server::{receive_message, start_ws};
 
 fn setup_gaussian_cloud(
@@ -29,7 +30,7 @@ fn setup_gaussian_cloud(
 ) {
     // let remote_file = Some("https://huggingface.co/datasets/cs50victor/splats/resolve/main/train/point_cloud/iteration_7000/point_cloud.gcloud");
     // TODO: figure out how to load remote files later
-    let splat_file = "splats/bonsai/point_cloud/iteration_7000/point_cloud.gcloud";
+    let splat_file = "splats/counter/point_cloud/iteration_7000/point_cloud.gcloud";
     log::info!("loading {}", splat_file);
     let cloud = asset_server.load(splat_file.to_string());
 
@@ -83,7 +84,9 @@ fn main() {
 
     Engine::new()
         .insert_resource(bevy_headless::SceneInfo::new(config.width, config.height))
-        .insert_resource(ClearColor(Color::rgb_u8(255, 255, 255)))
+        .init_resource::<WorldControlChannel>()
+        // .insert_resource(ClearColor(Color::rgb_u8(255, 255, 255)))
+        .insert_resource(ClearColor(Color::rgb_u8(0, 0, 0)))
         .add_plugins((
             HeadlessPlugin,
             WsPlugin,
@@ -92,6 +95,6 @@ fn main() {
             GaussianSplattingPlugin,
         ))
         .add_systems(Startup, (start_ws, setup_gaussian_cloud))
-        .add_systems(Update, receive_message)
+        .add_systems(Update, (receive_message,update_world_from_input))
         .run();
 }

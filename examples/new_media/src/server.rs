@@ -6,10 +6,13 @@ use bevy_headless::CurrImageContainer;
 use bevy_ws_server::{ReceiveError, WsConnection, WsListener};
 use log::info;
 use serde_json::json;
+use tungstenite::Message;
 
 use std::fmt::Debug;
 
 use serde::{Deserialize, Serialize};
+
+use crate::controls::WorldControlChannel;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct HttpServerMsg<T> {
@@ -48,6 +51,7 @@ pub fn start_ws(listener: Res<WsListener>) {
 pub fn receive_message(
     mut commands: Commands,
     curr_image: Res<CurrImageContainer>,
+    user_input: Res<WorldControlChannel>,
     connections: Query<(Entity, &WsConnection)>,
 ) {
     for (entity, conn) in connections.iter() {
@@ -55,9 +59,16 @@ pub fn receive_message(
             match conn.receive() {
                 Ok(message) => {
                     info!("message | {message:?}");
-                    let resp = tungstenite::protocol::Message::Text(
+                    if let Message::Text(msg) = message {
+                        if let Err(e) = user_input.tx.send(msg) {
+                            log::error!("Couldn't send user input to world channel | {e}");
+                        };
+                    }
+                    let curr_img = curr_image.0.lock();
+                    let resp = Message::Text(
                         json!({
-                            "image": curr_image.0.lock().to_web_base64().unwrap()
+                            "image": curr_img.to_web_base64().unwrap(),
+                            "dimension": curr_img.dimensions()
                         })
                         .to_string(),
                     );
