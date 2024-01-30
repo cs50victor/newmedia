@@ -30,7 +30,7 @@ fn setup_gaussian_cloud(
 ) {
     // let remote_file = Some("https://huggingface.co/datasets/cs50victor/splats/resolve/main/train/point_cloud/iteration_7000/point_cloud.gcloud");
     // TODO: figure out how to load remote files later
-    let splat_file = "splats/counter/point_cloud/iteration_7000/point_cloud.gcloud";
+    let splat_file = "splats/playroom/point_cloud/iteration_7000/point_cloud.gcloud";
     log::info!("loading {}", splat_file);
     let cloud = asset_server.load(splat_file.to_string());
 

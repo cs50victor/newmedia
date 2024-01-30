@@ -3,16 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ServerWSResponse } from "./WebSocketExample";
 
-const validCommands : Record<string, string> = {
-  "W": "UP",
-  "A": "LEFT",
-  "S": "DOWN",
-  "D": "RIGHT",
-  "ARROWUP": "ZOOM-IN",
-  "ARROWDOWN": "ZOOM-OUT"
-}
-
-export const Canvas=({img_metadata, socket}:{img_metadata: ServerWSResponse, socket: WebSocket })=>{
+export const Canvas=({img_metadata}:{img_metadata: ServerWSResponse })=>{
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [cursorPosition, setCursorPosition] = useState<[number, number]>()
   const aspectRatio = 16/9;
@@ -28,20 +19,6 @@ export const Canvas=({img_metadata, socket}:{img_metadata: ServerWSResponse, soc
       }
     }
   }, [img_metadata]);
-
-  const handle_keyboard_input = (e: KeyboardEvent) =>{
-    const key = e.key.toUpperCase()
-    if(key in validCommands){
-      e.preventDefault();
-      socket.send(validCommands[key])
-      console.log("key down -> ", key)
-    }
-  }
-
-  useEffect(() => {
-    document.addEventListener("keydown", handle_keyboard_input)
-    return () => document.removeEventListener("keydown", handle_keyboard_input)
-  }, []);
 
   return (
     <>
