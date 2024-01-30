@@ -1,17 +1,15 @@
 "use client"
 
 import { useEffect, useState } from 'react';
-import Image from 'next/image'
 import { Canvas } from './Canvas';
-
-type DisplayType = "image" | "canvas"
+import { Controller } from './Controller';
 
 export interface ServerWSResponse {
   image: string
   dimension: [number, number]
 }
 
-export default function WebSocketExample({port = 8080, display="canvas"}:{port?:number, display:DisplayType}){
+export default function WebSocketExample({port = 8080}:{port?:number}){
   const [imgMetadata, setImageMetadata] = useState<ServerWSResponse>();
   const [socket, setSocket] = useState<WebSocket>()
 
@@ -51,10 +49,11 @@ export default function WebSocketExample({port = 8080, display="canvas"}:{port?:
 
   return (
     <div>
-      { (imgMetadata && socket) ? (
-        display === "canvas" ? <Canvas img_metadata={imgMetadata} socket={socket}/> : <Image src={imgMetadata.image} alt="Streamed image" objectFit="cover" fill/>
+      { imgMetadata ? (
+        <Canvas img_metadata={imgMetadata} />
       ) : <p className='text-xl font-semibold'>NEW MEDIA | trying to connect to server...</p>
       }
+      {socket ? <Controller socket={socket}/> : null}
     </div>
   )
 };
