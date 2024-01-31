@@ -20,9 +20,6 @@
     "lint-staged": "^15.2.0",
     "prettier": "^3.1.1"
   },
-  "optionalDependencies": {
-    "rust": "nightly"
-  },
   "lint-staged": {
     "*.rs": [
       "cargo fmt --"
