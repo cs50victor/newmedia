@@ -64,10 +64,11 @@ impl CurrImage {
         let (w, h) = self.img_buffer.dimensions();
         [w, h]
     }
-    pub fn aspect_ratio(&self) -> [u32;2] {
-        let (w, h) = self.img_buffer.dimensions();
+
+    pub fn aspect_ratio(&self) -> [u32; 2] {
+        let (_w, _h) = self.img_buffer.dimensions();
         // TODO: calculate later
-        [16,9]
+        [16, 9]
     }
 }
 
