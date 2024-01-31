@@ -68,7 +68,8 @@ pub fn receive_message(
                     let resp = Message::Text(
                         json!({
                             "image": curr_img.to_web_base64().unwrap(),
-                            "dimension": curr_img.dimensions()
+                            "dimension": curr_img.dimensions(),
+                            "aspect_ratio": curr_img.aspect_ratio()
                         })
                         .to_string(),
                     );

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Inter, Roboto_Mono } from 'next/font/google';
+import { Bricolage_Grotesque, Inter, Roboto_Mono } from 'next/font/google';
 
 import { TailwindIndicator } from '~/components/TailwindIndicator';
 import { tw } from '~/utils/tw';
@@ -11,7 +11,7 @@ const inter = Inter({
   variable: '--font-sans',
 });
 
-const display = Roboto_Mono({
+const display = Bricolage_Grotesque({
   subsets: ['latin'],
   variable: '--font-display',
 });
