@@ -3,10 +3,12 @@
 import { useEffect, useState } from 'react';
 import { Canvas } from './Canvas';
 import { Controller } from './Controller';
+import { LoadingScreen } from './LoadingPlaceholder';
 
 export interface ServerWSResponse {
   image: string
   dimension: [number, number]
+  aspect_ratio: [number, number]
 }
 
 export default function WebSocketExample({port = 8080}:{port?:number}){
@@ -48,12 +50,14 @@ export default function WebSocketExample({port = 8080}:{port?:number}){
   }, []);
 
   return (
-    <div>
+    <>
       { imgMetadata ? (
-        <Canvas img_metadata={imgMetadata} />
-      ) : <p className='text-xl font-semibold'>NEW MEDIA | trying to connect to server...</p>
+          <div className={`w-screen px-4 aspect-[${imgMetadata.aspect_ratio[0]}/${imgMetadata.aspect_ratio[1]}]`}>
+            <Canvas img_metadata={imgMetadata} className='w-full h-full' />
+          </div>
+      ) : (<LoadingScreen/>)
       }
       {socket ? <Controller socket={socket}/> : null}
-    </div>
+    </>
   )
 };

@@ -2,15 +2,18 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ServerWSResponse } from "./WebSocketExample";
+import { tw } from "~/utils/tw";
 
-export const Canvas=({img_metadata}:{img_metadata: ServerWSResponse })=>{
+export const Canvas=({img_metadata, className}:{img_metadata: ServerWSResponse, className?: string })=>{
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [cursorPosition, setCursorPosition] = useState<[number, number]>()
-  const aspectRatio = 16/9;
+  const [w, h] = img_metadata.dimension;
 
   useEffect(() => {
     if (img_metadata){
       const ctx = canvasRef.current?.getContext('2d');
+      // ctx?.canvas.width = window.innerWidth;
+      // ctx?.canvas.height = window.innerWidth;
       const img = new Image();
       img.src = img_metadata.image;
       [img.width, img.height] = img_metadata.dimension
@@ -23,19 +26,20 @@ export const Canvas=({img_metadata}:{img_metadata: ServerWSResponse })=>{
   return (
     <>
       <canvas
-          className="w-screen h-screen"
+          className={tw("relative w-full h-full rounded-sm", className)}
           ref={canvasRef}
-          width={1000}
-          height={1000}
+          width={w ?? 1000}
+          height={h ?? 1000}
           onPointerMove={(event) => {
-            const [x,y]  = [event.clientX, event.clientY]
-            setCursorPosition([Math.round(x),Math.round(y)])
-            console.log(event.clientX, event.clientY)
+            setCursorPosition([Math.round(event.clientX), Math.round(event.clientY)])
           }}
           onPointerLeave={(_)=>{
             setCursorPosition(undefined)
           }}
       />
+      <p className="text-sm w-max text-center bg-amber-700 mx-auto rounded-lg px-2 py-1 text-background font-medium">
+        cursor position : [{" "} {cursorPosition?.[0] ?? "_"}, {cursorPosition?.[1] ?? "_"}{" "}]
+      </p>
     </>
   )
 }

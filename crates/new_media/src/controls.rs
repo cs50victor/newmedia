@@ -26,7 +26,7 @@ pub fn update_world_from_input(
     input_receiver: Res<WorldControlChannel>,
     mut camera: Query<&mut Transform, With<Camera>>,
 ) {
-    let speed = 0.1;
+    let speed = 1.0;
     if let Ok(input) = input_receiver.rx.try_recv() {
         log::info!("user input : {input}");
         match input.as_str() {
