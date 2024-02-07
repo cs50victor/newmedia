@@ -4,12 +4,15 @@
 # Allow files and directories
 !/.cargo/
 !/Cargo.toml
-!/Cargo.lock
-!/crates/new_media
-!/recipie.json
+!/crates/bevy_ws_server
+!/crates/bevy_headless
+!/new_media/Cargo.toml
+!/new_media/src/**
+
 # Ignore unnecessary files inside allowed directories
 # This should go after the allowed directories
 # **/*~
 # **/*.log
 # **/.DS_Store
 # **/Thumbs.db
+
