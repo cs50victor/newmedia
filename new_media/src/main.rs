@@ -70,7 +70,6 @@ pub struct AppConfig {
 
 fn main() {
     dotenvy::from_filename_override(".env.local").ok();
-    // ************** REQUIRED ENV VARS **************
 
     pretty_env_logger::formatted_builder()
         .filter_module("new_media", log::LevelFilter::Info)
