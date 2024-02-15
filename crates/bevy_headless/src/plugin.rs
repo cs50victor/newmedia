@@ -238,12 +238,6 @@ fn capture_img_bytes<P: Pixel + PixelWithColorType>(
     match ImageBuffer::<P, _>::from_raw(source_size.width, source_size.height, image_bytes) {
         Some(image_bytes) => {
             curr_img.0.lock().update_data(frame_id, &image_bytes, extension.to_owned());
-
-            // if let Some(curr_img) = curr_img.as_mut(){
-            //     curr_img.update_data(frame_id, &image_bytes, extension.to_owned());
-            // }else{
-            //     log::info!("Curr Image Resource still doesn't exist");
-            // }
         },
         None => {
             log::error!("Failed creating image buffer for frame - '{frame_id}'");
@@ -271,7 +265,7 @@ impl Plugin for HeadlessPlugin {
                     exit_condition: bevy::window::ExitCondition::DontExit,
                     close_when_requested: false,
                 })
-                .disable::<LogPlugin>(),
+                .disable::<LogPlugin>()
         );
 
         // TODO:
