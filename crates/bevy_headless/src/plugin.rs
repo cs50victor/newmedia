@@ -265,7 +265,7 @@ impl Plugin for HeadlessPlugin {
                     exit_condition: bevy::window::ExitCondition::DontExit,
                     close_when_requested: false,
                 })
-                .disable::<LogPlugin>()
+                .disable::<LogPlugin>(),
         );
 
         // TODO:
