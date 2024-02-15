@@ -24,4 +24,4 @@ tungstenite = { workspace = true }
 openssl = { version = "0.10.63", features = ["vendored"], optional = true}
 
 [features]
-docker = ["dep:openssl","bevy/wayland", "bevy/x11"]
+docker = ["dep:openssl","bevy/x11"]
