@@ -2,25 +2,25 @@
 name = "new_media"
 version = "0.0.1"
 edition = "2021"
-rust-version.workspace = true
+rus.workspace = true
 default-run = "new_media"
 
 [dependencies]
-anyhow = { workspace = true }
-async-net = { workspace = true }
-base64 = { workspace = true }
-bevy = { workspace = true }
+anyhow.workspace = true 
+async-net.workspace = true 
+base64.workspace = true 
+bevy.workspace = true 
 bevy_ws_server = { path = "../crates/bevy_ws_server" }
 bevy_headless = { path = "../crates/bevy_headless" }
 bevy_gaussian_splatting = { version = "2.0.2", default-features = true }
-bevy_panorbit_camera = { workspace = true }
-crossbeam-channel = { workspace = true }
+bevy_panorbit_camera.workspace = true 
+crossbeam-channel.workspace = true 
 dotenvy = "0.15.7"
-log = { workspace = true }
-pretty_env_logger = { workspace = true }
+log.workspace = true 
+pretty_env_logger.workspace = true 
 serde = { version = "1.0.192", features = ["derive"] }
 serde_json = "1.0.108"
-tungstenite = { workspace = true }
+tungstenite.workspace = true 
 openssl = { version = "0.10.63", features = ["vendored"], optional = true}
 
 [features]
