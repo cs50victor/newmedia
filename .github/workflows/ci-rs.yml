@@ -24,9 +24,7 @@ concurrency:
 
 jobs:
   ci-rs:
-    # revert later  
-    # runs-on: ubuntu-latest
-    runs-on: macos-latest
+    runs-on: [ macos-latest, ubuntu-latest]
     strategy:
       fail-fast: false
       matrix:
@@ -44,22 +42,15 @@ jobs:
           components: rustfmt, clippy
           enable-sccache: "true"
 
-      # - name: Install binaries
-      #   run: sudo apt-get update && sudo apt-get install -y clang pkg-config libx11-dev libasound2-dev libudev-dev libxkbcommon-x11-0 gcc-multilib
+      - name: Install binaries
+        run: sudo apt-get update && sudo apt-get install -y clang pkg-config libx11-dev libasound2-dev libudev-dev libxkbcommon-x11-0 gcc-multilib
 
       - name: Build
-        run: cargo build --release # --verbose
+        run: cargo build --release --features docker
 
       - name: Test
-        run: cargo test --release # --verbose
+        run: cargo test --release
 
       - name: Lint
         run: cargo fmt --all -- --check
         # && cargo clippy --verbose -- -D warnings
-
-      # - name: Bloat Check
-      #   uses: cs50victor/cargo-bloat-action@master
-      #   with:
-      #     token: ${{ secrets.GITHUB_TOKEN }}
-      #     kv_token: ${{ secrets.KV_TOKEN }}
-      #     included_packages: "lkgpt"

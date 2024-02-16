@@ -5,7 +5,7 @@ edition = "2021"
 rust-version.workspace = true
 
 [dependencies]
-bevy = { workspace = true }
+bevy.workspace = true
 bevy_headless = { path = "../../crates/bevy_headless"}
-log = { workspace = true }
-pretty_env_logger = { workspace = true }
+log.workspace = true
+pretty_env_logger.workspace = true
