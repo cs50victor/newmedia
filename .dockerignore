@@ -5,6 +5,7 @@
 !/.cargo/
 !/Cargo.toml
 !/crates/bevy_ws_server
+!/crates/bevy_remote_asset
 !/crates/bevy_headless
 !/new_media/Cargo.toml
 !/new_media/src/**
