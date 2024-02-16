@@ -39,4 +39,4 @@ ENV PATH="/root/.cargo/bin:${PATH}"
 
 EXPOSE 8080
 
-CMD xvfb-run -l -s "-screen 0 1024x768x24" "./new_media"
+CMD xvfb-run -s "-screen 0 1024x768x24" "./new_media"

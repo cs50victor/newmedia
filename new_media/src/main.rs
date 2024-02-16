@@ -23,7 +23,7 @@ use server::{receive_message, start_ws};
 fn setup_gaussian_cloud(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
-    _gaussian_assets: ResMut<Assets<GaussianCloud>>,
+    mut gaussian_assets: ResMut<Assets<GaussianCloud>>,
     mut scene_controller: ResMut<bevy_headless::SceneInfo>,
     mut images: ResMut<Assets<Image>>,
     export_sources: ResMut<Assets<ImageExportSource>>,
@@ -32,9 +32,9 @@ fn setup_gaussian_cloud(
     // TODO: figure out how to load remote files later
     let splat_file = "splats/garden/point_cloud/iteration_7000/point_cloud.gcloud";
     log::info!("loading {}", splat_file);
-    let cloud = asset_server.load(splat_file.to_string());
+    // let cloud = asset_server.load(splat_file.to_string());
 
-    // let cloud = gaussian_assets.add(GaussianCloud::test_model());
+    let cloud = gaussian_assets.add(GaussianCloud::test_model());
 
     let render_target = bevy_headless::setup_render_target(
         &mut commands,
