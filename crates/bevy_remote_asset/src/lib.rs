@@ -1,14 +1,7 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
-}
+// derived from https://github.com/johanhelsing/bevy_web_asset
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+mod web_asset_plugin;
+mod web_asset_source;
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-}
+pub use web_asset_plugin::WebAssetPlugin;
+pub use web_asset_source::WebAssetReader;

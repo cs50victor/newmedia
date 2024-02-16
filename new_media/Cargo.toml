@@ -2,7 +2,7 @@
 name = "new_media"
 version = "0.0.1"
 edition = "2021"
-rus.workspace = true
+rust.workspace = true
 default-run = "new_media"
 
 [dependencies]
@@ -12,6 +12,7 @@ base64.workspace = true
 bevy.workspace = true 
 bevy_ws_server = { path = "../crates/bevy_ws_server" }
 bevy_headless = { path = "../crates/bevy_headless" }
+bevy_remote_asset = { path = "../crates/bevy_remote_asset" }
 bevy_gaussian_splatting = { version = "2.0.2", default-features = true }
 bevy_panorbit_camera.workspace = true 
 crossbeam-channel.workspace = true 
