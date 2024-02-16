@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "build": "pnpm --dir=demo build",
+    "dev:server": "docker run --rm -it $(docker build -q .)",
     "dev": "concurrently --names 'WEB,SERVER' -c 'auto' \"pnpm --dir=demo dev\" \"cargo rr --bin new_media\"",
     "format": "concurrently --names 'fmt:web,fmt:rs,fmt:toml' -c 'auto' \"pnpm format:prettier\" \"pnpm format:rs\" \"pnpm format:toml\"",
     "format:prettier": "prettier --write \"**/*.{js,ts,tsx}\"",

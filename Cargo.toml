@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["crates/*"]
+members = ["crates/*", "new_media"]
 
 package.rust-version = "1.75.0"
 
@@ -28,7 +28,7 @@ bevy = { version = "0.12.1", default-features = false, features = [
   "bevy_asset",
   "bevy_core_pipeline",
   "bevy_render",
-  "multi-threaded"
+  "multi-threaded",
 ] }
 bevy_panorbit_camera = "0.10.0"
 crossbeam-channel = "0.5.10"

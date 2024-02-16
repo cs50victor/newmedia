@@ -38,7 +38,7 @@ pub fn start_ws(listener: Res<WsListener>) {
         .parse::<u16>()
         .expect("PORT couldn't be set");
 
-    match listener.listen(([127, 0, 0, 1], port), None) {
+    match listener.listen(([0, 0, 0, 0], port), None) {
         Ok(host) => {
             log::info!("Websocket Server listening on {host:?}");
         },
