@@ -4,9 +4,6 @@
 # Allow files and directories
 !/.cargo/
 !/Cargo.toml
-!/start.sh
-!/labwc
-!/sway
 !/crates/bevy_ws_server
 !/crates/bevy_headless
 !/new_media/Cargo.toml

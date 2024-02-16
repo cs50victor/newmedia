@@ -9,8 +9,7 @@ WORKDIR /app
 RUN cargo install cargo-chef
 COPY --from=planner /app/recipe.json recipe.json
 # Build tools
-RUN apt-get update
-RUN apt-get install -y -qq build-essential software-properties-common pkg-config xorg openbox xauth
+RUN apt-get update && apt-get install -y -qq xorg xauth
 RUN cargo chef cook --release --features docker --recipe-path=recipe.json
 
 FROM rust as builder
@@ -19,8 +18,7 @@ WORKDIR /app
 COPY --from=cacher /app/target target
 COPY --from=cacher /usr/local/cargo /usr/local/cargo
 # Build tools
-RUN apt-get update
-RUN apt-get install -y -qq build-essential software-properties-common pkg-config xorg openbox xauth
+RUN apt-get update && apt-get install -y -qq xorg xauth
 RUN cargo build --release --features docker
 
 FROM ubuntu:22.04
@@ -41,4 +39,4 @@ ENV PATH="/root/.cargo/bin:${PATH}"
 
 EXPOSE 8080
 
-CMD xvfb-run -s "-screen 0 1280x1024x24" "./new_media"
+CMD xvfb-run -l -s "-screen 0 1024x768x24" "./new_media"
