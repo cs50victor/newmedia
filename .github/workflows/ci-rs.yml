@@ -24,7 +24,7 @@ concurrency:
 
 jobs:
   ci-rs:
-    runs-on: [ macos-latest, ubuntu-latest]
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -49,7 +49,7 @@ jobs:
         run: cargo build --release --features docker
 
       - name: Test
-        run: cargo test --release
+        run: cargo test --release --features docker
 
       - name: Lint
         run: cargo fmt --all -- --check
