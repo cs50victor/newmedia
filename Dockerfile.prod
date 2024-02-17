@@ -1,0 +1,38 @@
+# Prepare
+FROM rust as planner
+WORKDIR /app
+RUN cargo install cargo-chef
+COPY . .
+RUN cargo chef prepare --recipe-path recipe.json
+
+# Cook
+FROM rust as cacher
+WORKDIR /app
+RUN cargo install cargo-chef
+COPY --from=planner /app/recipe.json recipe.json
+RUN apt-get update && apt-get install -y -qq xorg xauth
+RUN cargo chef cook --release --features docker --recipe-path=recipe.json
+
+# Build
+FROM rust as builder
+COPY . /app
+WORKDIR /app
+COPY --from=cacher /app/target target
+COPY --from=cacher /usr/local/cargo /usr/local/cargo
+RUN apt-get update && apt-get install -y -qq xorg xauth
+RUN cargo build --release --features docker
+
+# RUN
+FROM ubuntu:22.04
+COPY --from=builder /app/target/release/new_media /app/new_media
+WORKDIR /app
+# Build tools
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y -qq xorg xauth
+# Bevy dependencies 
+RUN DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -yq libasound2-dev libudev-dev libxkbcommon-x11-0
+# Graphics
+RUN apt-get update && apt install -y xvfb libegl1-mesa libgl1-mesa-dri libxcb-xfixes0-dev mesa-vulkan-drivers
+
+EXPOSE 8080
+
+CMD xvfb-run -s "-screen 0 1024x768x24" "./new_media"

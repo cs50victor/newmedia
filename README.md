@@ -6,4 +6,4 @@
 
 
 - run web: `pnpm --dir=demo dev`
-- run server: `docker run -it -p 8080:8080 $(docker build -q .)`
+- run server: `docker run -it -p 8080:8080 $(docker build -f Dockerfile.dev -q .)`

@@ -1,0 +1,19 @@
+app = 'new-media-still-surf-1038'
+primary_region = 'sjc'
+
+[build]
+  dockerfile = 'Dockerfile.prod'
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[vm]]
+  cpu_kind = 'performance'
+  memory = '64gb'
+  cpus = 16
+  size = "a100-40gb"
