@@ -2,7 +2,7 @@ mod asset;
 mod controls;
 mod server;
 
-use asset::setup_gaussian_cloud;
+use asset::{setup_camera, setup_gaussian_cloud};
 use bevy::{
     app::{App as Engine, ScheduleRunnerPlugin, Startup, Update},
     core_pipeline::clear_color::ClearColor,
@@ -29,6 +29,8 @@ fn main() {
         .filter_module("new_media", log::LevelFilter::Info)
         .filter_module("bevy", log::LevelFilter::Info)
         .filter_module("bevy_headless", log::LevelFilter::Info)
+        .filter_module("bevy_remote_asset", log::LevelFilter::Info)
+        .filter_module("bevy_remote_asset", log::LevelFilter::Debug)
         .filter_module("bevy_ws_server", log::LevelFilter::Info)
         .filter_module("bevy_ws_server", log::LevelFilter::Debug)
         .init();
@@ -39,7 +41,6 @@ fn main() {
     Engine::new()
         .insert_resource(bevy_headless::SceneInfo::new(config.width, config.height))
         .init_resource::<WorldControlChannel>()
-        // .insert_resource(ClearColor(Color::rgb_u8(255, 255, 255)))
         .insert_resource(ClearColor(Color::rgb_u8(0, 0, 0)))
         .add_plugins((
             WebAssetPlugin,
@@ -49,7 +50,7 @@ fn main() {
             PanOrbitCameraPlugin,
             GaussianSplattingPlugin,
         ))
-        .add_systems(Startup, (start_ws, setup_gaussian_cloud))
-        .add_systems(Update, (receive_message,update_world_from_input))
+        .add_systems(Startup, (start_ws, setup_camera, setup_gaussian_cloud))
+        .add_systems(Update, (receive_message, update_world_from_input))
         .run();
 }

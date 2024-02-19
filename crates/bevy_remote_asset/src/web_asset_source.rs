@@ -29,6 +29,8 @@ impl WebAssetReader {
 }
 
 async fn get<'a>(path: PathBuf) -> Result<Box<Reader<'a>>, AssetReaderError> {
+    println!("get");
+
     use std::{
         future::Future,
         io,
@@ -59,6 +61,7 @@ async fn get<'a>(path: PathBuf) -> Result<Box<Reader<'a>>, AssetReaderError> {
             format!("non-utf8 path: {}", path.display()),
         ))
     })?;
+
     let mut response = ContinuousPoll(surf::get(str_path)).await.map_err(|err| {
         AssetReaderError::Io(io::Error::new(
             io::ErrorKind::Other,
@@ -70,6 +73,25 @@ async fn get<'a>(path: PathBuf) -> Result<Box<Reader<'a>>, AssetReaderError> {
             ),
         ))
     })?;
+
+    if response.status() == StatusCode::Found {
+        if let Some(uri) = response.header("Location") {
+            let uri = uri.as_str();
+            response = ContinuousPoll(surf::get(uri)).await.map_err(|err| {
+                AssetReaderError::Io(io::Error::new(
+                    io::ErrorKind::Other,
+                    format!(
+                        "unexpected status code {} while loading {}: {}",
+                        err.status(),
+                        path.display(),
+                        err.into_inner(),
+                    ),
+                ))
+            })?;
+        };
+    }
+
+    println!("{}", response.status());
 
     match response.status() {
         StatusCode::Ok => Ok(Box::new(VecReader::new(

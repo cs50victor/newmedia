@@ -1,5 +1,3 @@
-// derived from https://github.com/johanhelsing/bevy_web_asset
-
 mod web_asset_plugin;
 mod web_asset_source;
 
