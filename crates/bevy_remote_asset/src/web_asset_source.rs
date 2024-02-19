@@ -29,7 +29,7 @@ impl WebAssetReader {
 }
 
 async fn get<'a>(path: PathBuf) -> Result<Box<Reader<'a>>, AssetReaderError> {
-    println!("get");
+    println!("get | {path:?}");
 
     use std::{
         future::Future,
@@ -90,8 +90,6 @@ async fn get<'a>(path: PathBuf) -> Result<Box<Reader<'a>>, AssetReaderError> {
             })?;
         };
     }
-
-    println!("{}", response.status());
 
     match response.status() {
         StatusCode::Ok => Ok(Box::new(VecReader::new(
