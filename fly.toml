@@ -1,5 +1,5 @@
-app = 'new-media-still-surf-1038'
-primary_region = 'sjc'
+app = 'new-media'
+primary_region = 'ord'
 
 [build]
   dockerfile = 'Dockerfile.prod'
