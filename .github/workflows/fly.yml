@@ -1,0 +1,26 @@
+name: Deploy NEW_MEDIA to Fly
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get source code
+        uses: actions/checkout@v3
+
+      - name: Deploy to Fly.io
+        uses: superfly/flyctl-actions@1.4
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        with:
+          args: "deploy --remote-only --dockerfile ./Dockerfile.prod --config ./fly.toml"
+
+
