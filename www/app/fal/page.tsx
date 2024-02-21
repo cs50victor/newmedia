@@ -49,6 +49,7 @@ export default function Home() {
     connectionKey: 'realtime-nextjs-app',
     onResult(result) {
       if (result.error) return
+      console.log("images", result.images)
       setImage(result.images[0].url)
     }
   })
@@ -114,8 +115,8 @@ export default function Home() {
             <div className='border rounded-lg p-1'>
                 <Image
                   src={image}
-                  width={550}
-                  height={550}
+                  width={1050}
+                  height={1050}
                   alt='fal image'
                 />
             </div>

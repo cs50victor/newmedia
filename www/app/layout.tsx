@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(`https://${process.env.VERCEL_URL}`),
   title: {
     default: 'New Media',
-    template: '%s - Media',
+    template: '%s - New Media',
   },
 };
 
