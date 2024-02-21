@@ -12,7 +12,7 @@ export interface ServerWSResponse {
 }
 
 export default function WebSocketExample({port = 8080}:{port?:number}){
-  const server_ws_url  = process.env.NODE_ENV === "production" ? `ws://localhost:${port}` : "ws://new-media.fly.dev"
+  const server_ws_url  = process.env.NODE_ENV != "production" ? `ws://localhost:${port}` : "wss://new-media.fly.dev"
   const [imgMetadata, setImageMetadata] = useState<ServerWSResponse>();
   const [socket, setSocket] = useState<WebSocket>()
 
