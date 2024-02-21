@@ -36,6 +36,14 @@ jobs:
       - name: Install Global Dependencies
         run: bun install --ignore-scripts
 
-      #  Errors out on build when separated into multiple steps
-      - name: Install, Build, and Lint Demo
-        run: cd demo && bun install --ignore-scripts && bun run build && bun run lint
+      - name: Install
+        working-directory: ./www
+        run: bun install --ignore-scripts
+      
+      - name: Build
+        working-directory: ./www
+        run: bun run build
+      
+      - name: Lint
+        working-directory: ./www
+        run: bun run lint

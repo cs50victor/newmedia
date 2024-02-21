@@ -28,8 +28,6 @@ const InputCanvas = dynamic(
 );
 
 
-  
-
 export default function Home() {
   const [input, setInput] = useState('masterpice, best quality, A cinematic shot of a baby raccoon wearing an intricate italian priest robe')
   const [image, setImage] = useState(null)
