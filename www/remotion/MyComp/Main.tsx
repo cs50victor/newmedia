@@ -28,8 +28,8 @@ export const Main = ({ title }: z.infer<typeof CompositionProps>) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const transitionStart = 2 * fps;
-  const transitionDuration = 1 * fps;
+  const transitionStart = 0 * fps;
+  const transitionDuration = 2 * fps;
 
   const logoOut = spring({
     fps,
@@ -47,12 +47,6 @@ export const Main = ({ title }: z.infer<typeof CompositionProps>) => {
 
   return (
     <AbsoluteFill style={container}>
-      <Sequence durationInFrames={transitionStart + transitionDuration}>
-        <Rings outProgress={logoOut}></Rings>
-        <AbsoluteFill style={logo}>
-          <NextLogo outProgress={logoOut}></NextLogo>
-        </AbsoluteFill>
-      </Sequence>
       <Sequence from={transitionStart + transitionDuration / 2}>
         <TextFade>
           <h1 style={titleStyle}>{title}</h1>
@@ -61,3 +55,10 @@ export const Main = ({ title }: z.infer<typeof CompositionProps>) => {
     </AbsoluteFill>
   );
 };
+
+// <Sequence durationInFrames={transitionStart + transitionDuration /3}>
+//   <Rings outProgress={logoOut}></Rings>
+//   <AbsoluteFill style={logo}>
+//     {/* <NextLogo outProgress={logoOut}></NextLogo> */}
+//   </AbsoluteFill>
+// </Sequence>

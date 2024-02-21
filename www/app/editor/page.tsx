@@ -70,7 +70,6 @@ const Home: NextPage = () => {
         <Spacing></Spacing>
         <Spacing></Spacing>
         <Spacing></Spacing>
-        <Tips></Tips>
       </div>
     </div>
   );
