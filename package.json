@@ -2,6 +2,7 @@
   "name": "new_media",
   "version": "0.0.0",
   "private": true,
+  "workspaces": ["www"],
   "scripts": {
     "build": "pnpm --dir=demo build",
     "dev:server": "docker run --rm -it $(docker build -q .)",

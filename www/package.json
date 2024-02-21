@@ -1,18 +1,22 @@
 {
-  "name": "kitt2",
+  "name": "new_media",
   "version": "0.2.0",
   "private": true,
   "scripts": {
-    "dev": "ENVIRONMENT=../.env.local next dev --turbo",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "@excalidraw/excalidraw": "^0.17.0",
+    "@fal-ai/serverless-client": "^0.7.0",
+    "@fal-ai/serverless-proxy": "^0.6.0",
     "@radix-ui/react-slot": "^1.0.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
-    "next": "14.0.5-canary.65",
+    "lucide-react": "^0.335.0",
+    "next": "14.0.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "tailwind-merge": "^2.2.0"
@@ -35,6 +39,6 @@
     "typescript": "5.3.3"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   }
 }
